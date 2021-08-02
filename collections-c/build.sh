@@ -5,4 +5,4 @@ cp -v -R for-gillian for-wasp
 
 ./for_wasp.py
 
-make
+make -j$(nproc)

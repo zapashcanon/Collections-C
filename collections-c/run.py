@@ -2,19 +2,20 @@
 import glob, sys, time, json, subprocess, os, csv, logging
 
 # globals --------------------------------------------------
-timeout=20
-instruction_max=10000000
-dirs = glob.glob('tests/collections-c/_build/for-wasp/normal/*')
+TIMEOUT=20
+INSTR_MAX=10000000
+ROOT_DIR = '../wasp'
+dirs = glob.glob(f'_build/for-wasp/normal/*')
 table = [['category', 'tests', 'paths', 'T', 'L', 'S']]
 errors = list()
 #-----------------------------------------------------------
 
 # helpers --------------------------------------------------
-cmd  = lambda p : ['./wasp', p, '-e', '(invoke \"__original_main\")', \
-                   '-m', str(instruction_max)]
+cmd  = lambda p : [f'./{ROOT_DIR}/wasp', p, '-e', '(invoke \"__original_main\")', \
+                   '-m', str(INSTR_MAX)]
 def run(test : str):
     try:
-        out = subprocess.check_output(cmd(test), timeout=timeout, \
+        out = subprocess.check_output(cmd(test), timeout=TIMEOUT, \
                 stderr=subprocess.STDOUT)
     except (subprocess.CalledProcessError, \
             subprocess.TimeoutExpired) as e:
@@ -62,7 +63,7 @@ for dir in dirs:
             int(sum_paths/len(tests)), round(sum_time, 2), \
             round(sum_loop_time, 2), round(sum_solver_time, 2)])
 
-with open('tests/collections-c/table.csv', 'w', newline='') as f:
+with open('table.csv', 'w', newline='') as f:
     writer = csv.writer(f)
     writer.writerows(table)
 
