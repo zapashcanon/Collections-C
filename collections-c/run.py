@@ -40,12 +40,18 @@ for dir in dirs:
         delta = time.time() - t0
         
         # Oh no! we crashed!!
-        if out is None:
+        out_dir = f'output/{os.path.basename(test)}'
+        if not os.path.exists(out_dir + '/report.json'):
             errors.append(test)
             logging.info(f'Crashed/Timeout {os.path.basename(test)}')
             continue
+        
+        with open(f'{out_dir}/report.json', 'r') as f:
+            try:
+                report = json.load(f)
+            except json.decoder.JSONDecodeError:
+                logging.info(f'Thread {i}: Can not read report \'{out_dir}/report.json\'.')
 
-        report = json.loads(out)
         if not report['specification']:
             errors.append(test)
 
