@@ -11,7 +11,7 @@ errors = list()
 #-----------------------------------------------------------
 
 # helpers --------------------------------------------------
-cmd  = lambda p : [f'./{ROOT_DIR}/wasp', p, '-e', '(invoke \"__original_main\")', \
+cmd  = lambda p : [f'./{ROOT_DIR}/wasp', p, '-u','-e', '(invoke \"__original_main\")', \
                    '-m', str(INSTR_MAX)]
 def run(test : str):
     try:
