@@ -66,8 +66,8 @@ for dir in dirs:
               f'{report["instruction_counter"]})')
 
     table.append([f'{os.path.basename(dir)}', len(tests), \
-            int(sum_paths/len(tests)), round(sum_time, 2), \
-            round(sum_loop_time, 2), round(sum_solver_time, 2)])
+            int(sum_paths/len(tests)), round(sum_time, 3), \
+            round(sum_loop_time, 3), round(sum_solver_time, 3)])
 
 with open('table.csv', 'w', newline='') as f:
     writer = csv.writer(f)

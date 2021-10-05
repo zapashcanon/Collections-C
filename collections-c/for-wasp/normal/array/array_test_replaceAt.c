@@ -14,7 +14,6 @@ int main() {
     int c = sym_int("c");
 
     int r = sym_int("r");
-    assume(r != c);
     array_add(v1, &a);
     array_add(v1, &b);
     array_add(v1, &c);

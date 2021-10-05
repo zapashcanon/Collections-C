@@ -14,18 +14,18 @@ int main() {
     int b = sym_int("b");
     int c = sym_int("c");
 
-    stack_push(s, (void *)&a);
-    stack_push(s, (void *)&b);
-    stack_push(s, (void *)&c);
+    stack_push(s, (void *)a);
+    stack_push(s, (void *)b);
+    stack_push(s, (void *)c);
 
     int *pop;
     int *peek;
 
     stack_pop(s, (void *)&pop);
-    assert(&c == pop);
+    assert(c == pop);
 
     stack_peek(s, (void *)&peek);
-    assert(&b == peek);
+    assert(b == peek);
 
     teardown_tests();
     return 0;

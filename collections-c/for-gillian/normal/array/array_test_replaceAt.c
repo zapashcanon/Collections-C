@@ -14,7 +14,6 @@ int main() {
     int c = __builtin_annot_intval("symb_int", c);
 
     int r = __builtin_annot_intval("symb_int", r);
-    ASSUME(r != c);
     array_add(v1, &a);
     array_add(v1, &b);
     array_add(v1, &c);
