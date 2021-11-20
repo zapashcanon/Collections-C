@@ -1,5 +1,5 @@
 #include "deque.h"
-#include <wasp.h>
+#include "mockups.h"
 
 static Deque *deque;
 static DequeConf conf;
@@ -12,13 +12,13 @@ void teardown_tests() { deque_destroy(deque); }
 int main() {
     setup_tests();
 
-    int a = __WASP_symb_int("a");
-    int b = __WASP_symb_int("b");
-    int c = __WASP_symb_int("c");
-    int d = __WASP_symb_int("d");
-    int e = __WASP_symb_int("e");
-    int f = __WASP_symb_int("f");
-    int g = __WASP_symb_int("g");
+    int a = sym_int("a");
+    int b = sym_int("b");
+    int c = sym_int("c");
+    int d = sym_int("d");
+    int e = sym_int("e");
+    int f = sym_int("f");
+    int g = sym_int("g");
 
     deque_add_last(deque, &a);
     deque_add_last(deque, &b);
@@ -31,12 +31,12 @@ int main() {
 
     const void *const *buff = deque_get_buffer(deque);
 
-    __WASP_assert(buff[4] == &g);
+    assert(buff[4] == &g);
 
-    __WASP_assert(buff[5] == &e);
+    assert(buff[5] == &e);
 
     const void *elem = buff[6];
-    __WASP_assert(elem == &f);
+    assert(elem == &f);
 
     teardown_tests();
     return 0;

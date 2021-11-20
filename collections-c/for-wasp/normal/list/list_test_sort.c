@@ -1,5 +1,5 @@
 #include "list.h"
-#include <wasp.h>
+#include "mockups.h"
 
 static List *list1;
 static List *list2;
@@ -25,10 +25,10 @@ void teardown_test() {
 int main() {
     setup_tests();
 
-    int a = __WASP_symb_int("a");
-    int b = __WASP_symb_int("b");
-    int c = __WASP_symb_int("c");
-    int d = __WASP_symb_int("d");
+    int a = sym_int("a");
+    int b = sym_int("b");
+    int c = sym_int("c");
+    int d = sym_int("d");
 
     list_add(list1, &a);
     list_add(list1, &b);
@@ -44,7 +44,7 @@ int main() {
     void *e;
     list_iter_next(&iter, &prev);
     while (list_iter_next(&iter, &e) != CC_ITER_END) {
-        __WASP_assert(*((int *)prev) <= *((int *)e));
+        assert(*((int *)prev) <= *((int *)e));
         prev = e;
     }
 

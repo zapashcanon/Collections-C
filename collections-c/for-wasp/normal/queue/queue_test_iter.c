@@ -1,5 +1,5 @@
 #include "queue.h"
-#include <wasp.h>
+#include "mockups.h"
 
 static Queue *q;
 static Queue *q2;
@@ -18,9 +18,9 @@ void teardown_test() {
 int main() {
     setup_test();
 
-    int a = __WASP_symb_int("a");
-    int b = __WASP_symb_int("b");
-    int c = __WASP_symb_int("c");
+    int a = sym_int("a");
+    int b = sym_int("b");
+    int c = sym_int("c");
 
     queue_enqueue(q, &a);
     queue_enqueue(q, &b);
@@ -45,9 +45,9 @@ int main() {
             z++;
     }
 
-    __WASP_assert(1 == x);
-    __WASP_assert(1 == y);
-    __WASP_assert(1 == z);
+    assert(1 == x);
+    assert(1 == y);
+    assert(1 == z);
 
     teardown_test();
     return 0;

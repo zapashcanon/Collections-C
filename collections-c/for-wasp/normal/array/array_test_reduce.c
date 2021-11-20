@@ -1,5 +1,5 @@
 #include "array.h"
-#include <wasp.h>
+#include "mockups.h"
 
 void reduce_add(void *e1, void *e2, void *result) {
     int el1 = e1 ? *((int *)e1) : 0;
@@ -15,26 +15,26 @@ static int stat;
 int main() {
     stat = array_new(&v1);
 
-    int a = __WASP_symb_int("a");
-    int b = __WASP_symb_int("b");
-    int c = __WASP_symb_int("c");
-    int d = __WASP_symb_int("d");
-    int e = __WASP_symb_int("e");
+    int a = sym_int("a");
+    int b = sym_int("b");
+    int c = sym_int("c");
+    int d = sym_int("d");
+    int e = sym_int("e");
     int result;
 
     array_add(v1, &a);
     array_reduce(v1, reduce_add, (void *)&result);
-    __WASP_assert(a == result);
+    assert(a == result);
 
     array_add(v1, &b);
     array_reduce(v1, reduce_add, (void *)&result);
-    __WASP_assert(a + b == result);
+    assert(a + b == result);
 
     array_add(v1, &c);
     array_add(v1, &d);
     array_add(v1, &e);
     array_reduce(v1, reduce_add, (void *)&result);
-    __WASP_assert(a + b + c + d + e == result);
+    assert(a + b + c + d + e == result);
 
     array_destroy(v1);
 

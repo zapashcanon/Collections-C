@@ -57,7 +57,7 @@ void teardown_test() {
 int main() {
     setup_tests();
 
-    ASSUME (b != a && b != c && b != d);
+    ASSUME(b != a && b != c && b != d);
 
     int *e;
     list_get_at(list1, 1, (void *)&e);

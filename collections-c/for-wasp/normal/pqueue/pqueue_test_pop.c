@@ -1,8 +1,7 @@
 #include "pqueue.h"
-#include <wasp.h>
-struct Pair { int a, b; };
+#include "mockups.h"
 
-static struct Pair A, B, C;
+static struct Pair { int a, b; } A, B, C;
 
 static int comp(const void *a, const void *b) {
     int alpha1 = ((struct Pair *)a)->a, beta1 = ((struct Pair *)a)->b;
@@ -34,56 +33,56 @@ void teardown_tests() {
 int main() {
     setup_tests();
 
-    int a = __WASP_symb_int("a");
-    int b = __WASP_symb_int("b");
-    int c = __WASP_symb_int("c");
-    int d = __WASP_symb_int("d");
-    int e = __WASP_symb_int("e");
-    int f = __WASP_symb_int("f");
+    int a = sym_int("a");
+    int b = sym_int("b");
+    int c = sym_int("c");
+    int d = sym_int("d");
+    int e = sym_int("e");
+    int f = sym_int("f");
 
-    int x = __WASP_symb_int("x");
-    int y = __WASP_symb_int("y");
-    int z = __WASP_symb_int("z");
+    int x = sym_int("x");
+    int y = sym_int("y");
+    int z = sym_int("z");
     int *ptr;
 
-    __WASP_assume(x < 8388608 && x > -8388608);
-    __WASP_assume(y < 8388608 && y > -8388608);
-    __WASP_assume(z < 8388608 && z > -8388608);
+    assume(x < 8388608 && x > -8388608);
+    assume(y < 8388608 && y > -8388608);
+    assume(z < 8388608 && z > -8388608);
 
-    __WASP_assume(x > z && z > y);
+    assume(x > z && z > y);
 
     pqueue_push(p1, (void *)&y);
     pqueue_push(p1, (void *)&x);
     pqueue_push(p1, (void *)&z);
 
     pqueue_pop(p1, (void *)&ptr);
-    __WASP_assert(&x == ptr);
+    assert(&x == ptr);
 
     pqueue_pop(p1, (void *)&ptr);
-    __WASP_assert(&z == ptr);
+    assert(&z == ptr);
 
     pqueue_pop(p1, (void *)&ptr);
-    __WASP_assert(&y == ptr);
+    assert(&y == ptr);
 
     struct Pair *ptr2;
     A.a = a, A.b = b;
     B.a = c, B.b = d;
     C.a = e, C.b = f;
 
-    __WASP_assume(comp(&C, &A) > 0 && comp(&A, &B) > 0);
+    assume(comp(&C, &A) > 0 && comp(&A, &B) > 0);
 
     pqueue_push(p2, (void *)&A);
     pqueue_push(p2, (void *)&B);
     pqueue_push(p2, (void *)&C);
 
     pqueue_pop(p2, (void *)&ptr2);
-    __WASP_assert(&C == ptr2);
+    assert(&C == ptr2);
 
     pqueue_pop(p2, (void *)&ptr2);
-    __WASP_assert(&A == ptr2);
+    assert(&A == ptr2);
 
     pqueue_pop(p2, (void *)&ptr2);
-    __WASP_assert(&B == ptr2);
+    assert(&B == ptr2);
 
     teardown_tests();
     return 0;

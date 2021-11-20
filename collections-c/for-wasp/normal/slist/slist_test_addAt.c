@@ -1,5 +1,5 @@
 #include "slist.h"
-#include <wasp.h>
+#include "mockups.h"
 
 static SList *list;
 static SList *list2;
@@ -10,14 +10,14 @@ int a, b, c, d, e, f, g, h;
 void setup_test() {
     slist_new(&list), slist_new(&list2);
 
-    a = __WASP_symb_int("a");
-    b = __WASP_symb_int("b");
-    c = __WASP_symb_int("c");
-    d = __WASP_symb_int("d");
-    e = __WASP_symb_int("e");
-    f = __WASP_symb_int("f");
-    g = __WASP_symb_int("g");
-    h = __WASP_symb_int("h");
+    a = sym_int("a");
+    b = sym_int("b");
+    c = sym_int("c");
+    d = sym_int("d");
+    e = sym_int("e");
+    f = sym_int("f");
+    g = sym_int("g");
+    h = sym_int("h");
 
     int *va = (int *)malloc(sizeof(int));
     int *vb = (int *)malloc(sizeof(int));
@@ -58,26 +58,26 @@ void teardown_test() {
 int main() {
     setup_test();
 
-    int i = __WASP_symb_int("i");
+    int i = sym_int("i");
     int *ii = (int *)malloc(sizeof(int));
 
     *ii = i;
 
     slist_add_at(list, ii, 2);
-    __WASP_assert(5 == slist_size(list));
+    assert(5 == slist_size(list));
 
     int *new;
     slist_get_at(list, 2, (void *)&new);
-    __WASP_assert(*ii == *new);
-    __WASP_assert(CC_OK == slist_add_at(list, ii, 4));
-    __WASP_assert(CC_OK == slist_add_at(list, ii, 0));
+    assert(*ii == *new);
+    assert(CC_OK == slist_add_at(list, ii, 4));
+    assert(CC_OK == slist_add_at(list, ii, 0));
 
     void *el;
     slist_get_first(list, &el);
-    __WASP_assert(*ii == *((int *)el));
+    assert(*ii == *((int *)el));
 
     slist_get_first(list, &el);
-    __WASP_assert(*ii == *((int *)el));
+    assert(*ii == *((int *)el));
 
     teardown_test();
     return 0;

@@ -1,34 +1,34 @@
 #include "treetable.h"
 #include "utils.h"
-#include <wasp.h>
+#include "mockups.h"
 
 static TreeTable *table;
 
 int main() {
     treetable_new(cmp, &table);
 
-    int x = __WASP_symb_int("x");
-    int y = __WASP_symb_int("y");
-    int z = __WASP_symb_int("z");
-    int w = __WASP_symb_int("w");
+    int x = sym_int("x");
+    int y = sym_int("y");
+    int z = sym_int("z");
+    int w = sym_int("w");
 
-    int a = __WASP_symb_int("a");
+    int a = sym_int("a");
 
     char str_a[] = {a, '\0'};
 
-    int b = __WASP_symb_int("b");
+    int b = sym_int("b");
 
     char str_b[] = {b, '\0'};
 
-    int c = __WASP_symb_int("c");
+    int c = sym_int("c");
 
     char str_c[] = {c, '\0'};
 
-    int d = __WASP_symb_int("d");
+    int d = sym_int("d");
 
     char str_d[] = {d, '\0'};
 
-    __WASP_assume(x < y && y < z && z < w);
+    assume(x < y && y < z && z < w);
 
     treetable_add(table, &z, str_a);
     treetable_add(table, &w, str_b);
@@ -38,7 +38,7 @@ int main() {
     int *g;
     treetable_get_lesser_than(table, &y, (void *)&g);
 
-    __WASP_assert(x == *g);
+    assert(x == *g);
 
     treetable_destroy(table);
 }

@@ -1,5 +1,5 @@
 #include "deque.h"
-#include <wasp.h>
+#include "mockups.h"
 
 static Deque *deque;
 static DequeConf conf;
@@ -18,14 +18,14 @@ bool pred3(const void *e) { return *(int *)e > 5; }
 int main() {
     setup_tests();
 
-    int a = __WASP_symb_int("a");
-    int b = __WASP_symb_int("b");
-    int c = __WASP_symb_int("c");
-    int d = __WASP_symb_int("d");
-    int e = __WASP_symb_int("e");
-    int f = __WASP_symb_int("f");
+    int a = sym_int("a");
+    int b = sym_int("b");
+    int c = sym_int("c");
+    int d = sym_int("d");
+    int e = sym_int("e");
+    int f = sym_int("f");
 
-    __WASP_assume(!pred3(&d) && !pred3(&e) && pred3(&f) && !pred3(&a) && !pred3(&b) &&
+    assume(!pred3(&d) && !pred3(&e) && pred3(&f) && !pred3(&a) && !pred3(&b) &&
            !pred3(&c));
 
     deque_add_last(deque, &a);
@@ -34,14 +34,14 @@ int main() {
     deque_add_last(deque, &d);
     deque_add_last(deque, &e);
     deque_add_last(deque, &f);
-    __WASP_assert(6 == deque_size(deque));
+    assert(6 == deque_size(deque));
 
     deque_filter_mut(deque, pred3);
-    __WASP_assert(1 == deque_size(deque));
+    assert(1 == deque_size(deque));
 
     int *removed = NULL;
     deque_remove_first(deque, (void *)&removed);
-    __WASP_assert(f == *removed);
+    assert(f == *removed);
     teardown_tests();
     return 0;
 }

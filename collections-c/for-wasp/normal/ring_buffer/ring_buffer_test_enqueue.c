@@ -1,6 +1,6 @@
 #include "ring_buffer.h"
 #include "utils.h"
-#include <wasp.h>
+#include "mockups.h"
 
 static int stat;
 static Rbuf *rbuf;
@@ -13,34 +13,34 @@ int main() {
     setup_test();
 
     uint64_t items[10];
-    int a = __WASP_symb_int("a");
+    int a = sym_int("a");
     char str_a[] = {a, '\0'};
 
-    int b = __WASP_symb_int("b");
+    int b = sym_int("b");
     char str_b[] = {b, '\0'};
 
-    int c = __WASP_symb_int("c");
+    int c = sym_int("c");
     char str_c[] = {c, '\0'};
 
-    int d = __WASP_symb_int("d");
+    int d = sym_int("d");
     char str_d[] = {d, '\0'};
 
-    int e = __WASP_symb_int("e");
+    int e = sym_int("e");
     char str_e[] = {e, '\0'};
 
-    int f = __WASP_symb_int("f");
+    int f = sym_int("f");
     char str_f[] = {f, '\0'};
 
-    int g = __WASP_symb_int("g");
+    int g = sym_int("g");
     char str_g[] = {g, '\0'};
 
-    int h = __WASP_symb_int("h");
+    int h = sym_int("h");
     char str_h[] = {h, '\0'};
 
-    int i = __WASP_symb_int("i");
+    int i = sym_int("i");
     char str_i[] = {i, '\0'};
 
-    int j = __WASP_symb_int("j");
+    int j = sym_int("j");
     char str_j[] = {j, '\0'};
     rbuf_enqueue(rbuf, a);
     rbuf_enqueue(rbuf, b);
@@ -64,7 +64,7 @@ int main() {
     items[8] = i;
     items[9] = j;
     for (int i = 0; i < 10; i++)
-        __WASP_assert(rbuf_peek(rbuf, i) == items[i]);
+        assert(rbuf_peek(rbuf, i) == items[i]);
 
     teardown_test();
     return 0;

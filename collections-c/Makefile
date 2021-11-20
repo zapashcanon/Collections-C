@@ -2,19 +2,18 @@ CC=clang
 CFLAGS=-emit-llvm -g $(OPTIMIZE) --target=wasm32 -c -m32 $(INCLUDES) $(WARN)
 LD=wasm-ld
 
-BIN=bin
 LIB_DIR=lib
 BUG_LIB_DIR=lib-with-bugs
 UTILS_DIR=for-wasp/utils
+MOCKS_DIR=for-wasp/mockups
 NORMAL_TESTS=for-wasp/normal
 BUG_TESTS=for-wasp/bugs
 BUILD_DIR=_build
 OPTIMIZE ?= -O0
-WASP_LIB ?= ../wasp-c/lib
 
 # Includes
+INCLUDES += -I$(MOCKS_DIR)
 INCLUDES += -I$(UTILS_DIR)
-INCLUDES += -I$(WASP_LIB)
 
 # Warnings
 WARN += -Wno-incompatible-library-redeclaration
@@ -45,21 +44,9 @@ testbugso  := $(addprefix $(BUILD_DIR)/,$(testbugs:.c=.o))
 
 .SECONDARY: $(libo) $(libbugo)
 
-default: lib
-
-lib: $(BIN)/lib.a $(BIN)/lib-bugs.a clean
+default: all
 
 all: $(testso:.o=.wat) $(testbugso:.o=.wat)
-
-# lib
-
-$(BIN)/lib-bugs.a: $(libbugo) $(BUILD_DIR)/for-wasp/utils/utils.o
-	@mkdir -p $(dir $@)
-	@echo "llvm-ar rc $@ $^"; llvm-ar rc $@ $^
-
-$(BIN)/lib.a: $(libo) $(BUILD_DIR)/for-wasp/utils/utils.o
-	@mkdir -p $(dir $@)
-	@echo "llvm-ar rc $@ $^"; llvm-ar rc $@ $^
 
 # BUGS
 
@@ -103,7 +90,7 @@ $(BUILD_DIR)/%.o: $(BUILD_DIR)/%.bc
 $(BUILD_DIR)/%.wat: $(BUILD_DIR)/%.wasm
 	@echo "Building $@"
 	@wasm2wat $^ -o $@
-	@sh scipts/patch.sh $@
+	@./patch.sh $@
 
 # OTHER
 
@@ -113,6 +100,16 @@ $(BUILD_DIR)/for-wasp/utils/utils.bc: $(UTILS_DIR)/utils.c
 	@echo "$(CC) $(CFLAGS) -o $@ $^"; $(CC) $(CFLAGS) -o $@ $^
 
 $(BUILD_DIR)/for-wasp/utils/utils.o: $(BUILD_DIR)/for-wasp/utils/utils.bc
+	@echo "Building $@"
+	@opt -O1 $< -o $<
+	@llc -O1 -march=wasm32 -filetype=obj $< -o $@
+
+$(BUILD_DIR)/for-wasp/mockups/mockups.bc: $(MOCKS_DIR)/mockups.c
+	@mkdir -p $(dir $@)
+	@echo "Building $@"
+	@echo "$(CC) $(CFLAGS) -o $@ $^"; $(CC) $(CFLAGS) -o $@ $^
+
+$(BUILD_DIR)/for-wasp/mockups/mockups.o: $(BUILD_DIR)/for-wasp/mockups/mockups.bc
 	@echo "Building $@"
 	@opt -O1 $< -o $<
 	@llc -O1 -march=wasm32 -filetype=obj $< -o $@

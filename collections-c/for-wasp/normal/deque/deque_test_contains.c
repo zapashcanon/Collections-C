@@ -1,6 +1,6 @@
 #include "deque.h"
 #include "utils.h"
-#include <wasp.h>
+#include "mockups.h"
 
 static Deque *deque;
 static DequeConf conf;
@@ -13,13 +13,13 @@ void teardown_tests() { deque_destroy(deque); }
 int main() {
     setup_tests();
 
-    int a = __WASP_symb_int("a");
-    int b = __WASP_symb_int("b");
-    int c = __WASP_symb_int("c");
-    int d = __WASP_symb_int("d");
-    int e = __WASP_symb_int("e");
-    int f = __WASP_symb_int("f");
-    int g = __WASP_symb_int("g");
+    int a = sym_int("a");
+    int b = sym_int("b");
+    int c = sym_int("c");
+    int d = sym_int("d");
+    int e = sym_int("e");
+    int f = sym_int("f");
+    int g = sym_int("g");
 
     deque_add(deque, &a);
     deque_add(deque, &b);
@@ -29,9 +29,9 @@ int main() {
     deque_add(deque, &f);
     deque_add(deque, &a);
 
-    __WASP_assert(2 == deque_contains(deque, &a));
-    __WASP_assert(0 == deque_contains(deque, &g));
-    __WASP_assert(1 == deque_contains(deque, &e));
+    assert(2 == deque_contains(deque, &a));
+    assert(0 == deque_contains(deque, &g));
+    assert(1 == deque_contains(deque, &e));
 
     teardown_tests();
     return 0;

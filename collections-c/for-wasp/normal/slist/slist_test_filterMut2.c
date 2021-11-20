@@ -1,5 +1,5 @@
 #include "slist.h"
-#include <wasp.h>
+#include "mockups.h"
 
 static SList *list;
 static SList *list2;
@@ -16,14 +16,14 @@ int a, b, c, d, e, f, g, h;
 void setup_test() {
     slist_new(&list), slist_new(&list2);
 
-    a = __WASP_symb_int("a");
-    b = __WASP_symb_int("b");
-    c = __WASP_symb_int("c");
-    d = __WASP_symb_int("d");
-    e = __WASP_symb_int("e");
-    f = __WASP_symb_int("f");
-    g = __WASP_symb_int("g");
-    h = __WASP_symb_int("h");
+    a = sym_int("a");
+    b = sym_int("b");
+    c = sym_int("c");
+    d = sym_int("d");
+    e = sym_int("e");
+    f = sym_int("f");
+    g = sym_int("g");
+    h = sym_int("h");
 
     int *va = (int *)malloc(sizeof(int));
     int *vb = (int *)malloc(sizeof(int));
@@ -64,11 +64,11 @@ void teardown_test() {
 int main() {
     setup_test();
 
-    __WASP_assume(!pred2(&a) && !pred2(&b) && pred2(&c) && pred2(&d));
+    assume(!pred2(&a) && !pred2(&b) && pred2(&c) && pred2(&d));
 
-    __WASP_assert(4 == slist_size(list));
+    assert(4 == slist_size(list));
     slist_filter_mut(list, pred2);
-    __WASP_assert(2 == slist_size(list));
+    assert(2 == slist_size(list));
 
     SListIter iter;
     int *el = NULL;
@@ -76,13 +76,13 @@ int main() {
     slist_iter_init(&iter, list);
     while (slist_iter_next(&iter, (void *)&el) != CC_ITER_END) {
         if (i == 0)
-            __WASP_assert(*el == c);
+            assert(*el == c);
 
         if (i == 1)
-            __WASP_assert(*el == d);
+            assert(*el == d);
 
         if (i > 1)
-            __WASP_assert(false);
+            assert(false);
         i++;
     }
     teardown_test();

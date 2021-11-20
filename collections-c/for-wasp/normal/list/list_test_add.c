@@ -1,5 +1,5 @@
 #include "list.h"
-#include <wasp.h>
+#include "mockups.h"
 
 static List *list1;
 static List *list2;
@@ -14,29 +14,29 @@ void teardown_test() {
 int main() {
     setup_tests();
 
-    int a = __WASP_symb_int("a");
+    int a = sym_int("a");
     char str_a[] = {a, '\0'};
 
-    int b = __WASP_symb_int("b");
+    int b = sym_int("b");
     char str_b[] = {b, '\0'};
 
-    int c = __WASP_symb_int("c");
+    int c = sym_int("c");
     char str_c[] = {c, '\0'};
 
-    int d = __WASP_symb_int("d");
+    int d = sym_int("d");
     char str_d[] = {d, '\0'};
 
-    __WASP_assert(CC_OK == list_add(list1, str_a));
-    __WASP_assert(CC_OK == list_add(list1, str_b));
-    __WASP_assert(CC_OK == list_add(list1, str_c));
-    __WASP_assert(CC_OK == list_add(list1, str_d));
+    assert(CC_OK == list_add(list1, str_a));
+    assert(CC_OK == list_add(list1, str_b));
+    assert(CC_OK == list_add(list1, str_c));
+    assert(CC_OK == list_add(list1, str_d));
 
     void *e;
     list_get_first(list1, &e);
-    __WASP_assert(e != NULL);
+    assert(e != NULL);
 
     list_get_last(list1, &e);
-    __WASP_assert(e != NULL);
+    assert(e != NULL);
 
     teardown_test();
 }

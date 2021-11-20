@@ -1,37 +1,37 @@
 #include "treetable.h"
 #include "utils.h"
-#include <wasp.h>
+#include "mockups.h"
 
 static TreeTable *table;
 
 int main() {
     treetable_new(cmp, &table);
 
-    int x = __WASP_symb_int("x");
-    int y = __WASP_symb_int("y");
-    int z = __WASP_symb_int("z");
+    int x = sym_int("x");
+    int y = sym_int("y");
+    int z = sym_int("z");
 
-    int a = __WASP_symb_int("a");
+    int a = sym_int("a");
 
     char str_a[] = {a, '\0'};
 
-    int b = __WASP_symb_int("b");
+    int b = sym_int("b");
 
     char str_b[] = {b, '\0'};
 
-    int c = __WASP_symb_int("c");
+    int c = sym_int("c");
 
     char str_c[] = {c, '\0'};
 
-    __WASP_assume(a < b);
-    __WASP_assume(b < c);
+    assume(a < b);
+    assume(b < c);
 
     treetable_add(table, &x, str_a);
     treetable_add(table, &y, str_b);
     treetable_add(table, &z, str_c);
 
-    __WASP_assert(1 == treetable_contains_key(table, &x));
-    __WASP_assert(1 == treetable_contains_key(table, &z));
+    assert(1 == treetable_contains_key(table, &x));
+    assert(1 == treetable_contains_key(table, &z));
 
     treetable_destroy(table);
 }
