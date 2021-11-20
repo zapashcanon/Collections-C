@@ -1,6 +1,6 @@
 #include "ring_buffer.h"
 #include "utils.h"
-#include "mockups.h"
+#include <wasp.h>
 
 static int stat;
 static Rbuf *rbuf;
@@ -13,34 +13,34 @@ int main() {
     setup_test();
 
     uint64_t items[10];
-    int a = sym_int("a");
+    int a = __WASP_symb_int("a");
     char str_a[] = {a, '\0'};
 
-    int b = sym_int("b");
+    int b = __WASP_symb_int("b");
     char str_b[] = {b, '\0'};
 
-    int c = sym_int("c");
+    int c = __WASP_symb_int("c");
     char str_c[] = {c, '\0'};
 
-    int d = sym_int("d");
+    int d = __WASP_symb_int("d");
     char str_d[] = {d, '\0'};
 
-    int e = sym_int("e");
+    int e = __WASP_symb_int("e");
     char str_e[] = {e, '\0'};
 
-    int f = sym_int("f");
+    int f = __WASP_symb_int("f");
     char str_f[] = {f, '\0'};
 
-    int g = sym_int("g");
+    int g = __WASP_symb_int("g");
     char str_g[] = {g, '\0'};
 
-    int h = sym_int("h");
+    int h = __WASP_symb_int("h");
     char str_h[] = {h, '\0'};
 
-    int i = sym_int("i");
+    int i = __WASP_symb_int("i");
     char str_i[] = {i, '\0'};
 
-    int j = sym_int("j");
+    int j = __WASP_symb_int("j");
     char str_j[] = {j, '\0'};
     rbuf_enqueue(rbuf, a);
     rbuf_enqueue(rbuf, b);
@@ -64,23 +64,23 @@ int main() {
     items[8] = i;
     items[9] = j;
 
-    assert(items[0] == rbuf_peek(rbuf, 0));
-    assert(items[1] == rbuf_peek(rbuf, 1));
+    __WASP_assert(items[0] == rbuf_peek(rbuf, 0));
+    __WASP_assert(items[1] == rbuf_peek(rbuf, 1));
 
-    int x = sym_int("x");
+    int x = __WASP_symb_int("x");
     char str_x[] = {x, '\0'};
 
-    int y = sym_int("y");
+    int y = __WASP_symb_int("y");
     char str_y[] = {y, '\0'};
 
     rbuf_enqueue(rbuf, str_x);
     rbuf_enqueue(rbuf, str_y);
 
-    assert(rbuf_peek(rbuf, 0) == str_x);
-    assert(rbuf_peek(rbuf, 1) == str_y);
+    __WASP_assert(rbuf_peek(rbuf, 0) == str_x);
+    __WASP_assert(rbuf_peek(rbuf, 1) == str_y);
     uint64_t out;
     rbuf_dequeue(rbuf, &out);
-    assert(items[2] == out);
+    __WASP_assert(items[2] == out);
 
     teardown_test();
     return 0;

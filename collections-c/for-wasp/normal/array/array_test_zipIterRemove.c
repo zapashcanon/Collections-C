@@ -1,6 +1,6 @@
 #include "array.h"
 #include "utils.h"
-#include "mockups.h"
+#include <wasp.h>
 
 static Array *v1;
 static Array *v2;
@@ -10,35 +10,35 @@ static int stat;
 int main() {
     stat = array_new(&v1);
 
-    int a = sym_int("a");
+    int a = __WASP_symb_int("a");
 
     char str_a[] = {a, '\0'};
 
-    int b = sym_int("b");
+    int b = __WASP_symb_int("b");
 
     char str_b[] = {b, '\0'};
 
-    int c = sym_int("c");
+    int c = __WASP_symb_int("c");
 
     char str_c[] = {c, '\0'};
 
-    int d = sym_int("d");
+    int d = __WASP_symb_int("d");
 
     char str_d[] = {d, '\0'};
 
-    int e = sym_int("e");
+    int e = __WASP_symb_int("e");
 
     char str_e[] = {e, '\0'};
 
-    int f = sym_int("f");
+    int f = __WASP_symb_int("f");
 
     char str_f[] = {f, '\0'};
 
-    int g = sym_int("g");
+    int g = __WASP_symb_int("g");
 
     char str_g[] = {g, '\0'};
 
-    assume((!(strcmp(str_a, str_b) == 0)) && (!(strcmp(str_c, str_b) == 0)) &&
+    __WASP_assume((!(strcmp(str_a, str_b) == 0)) && (!(strcmp(str_c, str_b) == 0)) &&
            (!(strcmp(str_d, str_b) == 0)));
 
     array_add(v1, str_a);
@@ -62,10 +62,10 @@ int main() {
             array_zip_iter_remove(&zip, &r1, &r2);
     }
     CHECK_EQUAL_C_STRING(str_b, (char *)r1);
-    assert(0 == array_contains(v1, str_b));
-    assert(0 == array_contains(v2, str_f));
-    assert(3 == array_size(v1));
-    assert(2 == array_size(v2));
+    __WASP_assert(0 == array_contains(v1, str_b));
+    __WASP_assert(0 == array_contains(v2, str_f));
+    __WASP_assert(3 == array_size(v1));
+    __WASP_assert(2 == array_size(v2));
 
     array_destroy(v2);
 

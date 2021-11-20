@@ -1,5 +1,5 @@
 #include "slist.h"
-#include "mockups.h"
+#include <wasp.h>
 
 static SList *list;
 static SList *list2;
@@ -20,17 +20,17 @@ int main() {
 
     SList *list2 = NULL;
     slist_new(&list2);
-    assert(list != NULL);
-    assert(list2 != NULL);
+    __WASP_assert(list != NULL);
+    __WASP_assert(list2 != NULL);
 
     void *e = NULL;
     slist_get_first(list, &e);
-    assert(NULL == e);
+    __WASP_assert(NULL == e);
 
     slist_get_last(list, &e);
-    assert(NULL == e);
-    assert(0 == slist_size(list));
-    assert(list != list2);
+    __WASP_assert(NULL == e);
+    __WASP_assert(0 == slist_size(list));
+    __WASP_assert(list != list2);
 
     teardown_test();
     return 0;

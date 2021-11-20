@@ -1,27 +1,27 @@
 #include "treetable.h"
 #include "utils.h"
-#include "mockups.h"
+#include <wasp.h>
 
 static TreeTable *table;
 
 int main() {
     treetable_new(cmp, &table);
 
-    int x = sym_int("x");
-    int y = sym_int("y");
-    int z = sym_int("z");
+    int x = __WASP_symb_int("x");
+    int y = __WASP_symb_int("y");
+    int z = __WASP_symb_int("z");
 
-    assume(x < y && y < z);
+    __WASP_assume(x < y && y < z);
 
-    int a = sym_int("a");
+    int a = __WASP_symb_int("a");
 
     char str_a[] = {a, '\0'};
 
-    int b = sym_int("b");
+    int b = __WASP_symb_int("b");
 
     char str_b[] = {b, '\0'};
 
-    int c = sym_int("c");
+    int c = __WASP_symb_int("c");
 
     char str_c[] = {c, '\0'};
 
@@ -37,14 +37,14 @@ int main() {
         int const *key = entry.key;
 
         if (*key == y) {
-            assert(CC_OK == treetable_iter_remove(&iter, NULL));
+            __WASP_assert(CC_OK == treetable_iter_remove(&iter, NULL));
 
-            assert(CC_ERR_KEY_NOT_FOUND == treetable_iter_remove(&iter, NULL));
+            __WASP_assert(CC_ERR_KEY_NOT_FOUND == treetable_iter_remove(&iter, NULL));
         }
     }
 
-    assert(2 == treetable_size(table));
-    assert(0 == treetable_contains_key(table, &y));
+    __WASP_assert(2 == treetable_size(table));
+    __WASP_assert(0 == treetable_contains_key(table, &y));
 
     treetable_destroy(table);
 }

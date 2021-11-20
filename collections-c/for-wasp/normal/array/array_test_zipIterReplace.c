@@ -1,5 +1,5 @@
 #include "array.h"
-#include "mockups.h"
+#include <wasp.h>
 
 static Array *v1;
 static Array *v2;
@@ -9,48 +9,49 @@ static int stat;
 int main() {
     stat = array_new(&v1);
 
-    int a = sym_int("a");
+    int a = __WASP_symb_int("a");
 
     char str_a[] = {a, '\0'};
 
-    int b = sym_int("b");
+    int b = __WASP_symb_int("b");
 
     char str_b[] = {b, '\0'};
 
-    int c = sym_int("c");
+    int c = __WASP_symb_int("c");
 
     char str_c[] = {c, '\0'};
 
-    int d = sym_int("d");
+    int d = __WASP_symb_int("d");
 
     char str_d[] = {d, '\0'};
 
-    int e = sym_int("e");
+    int e = __WASP_symb_int("e");
 
     char str_e[] = {e, '\0'};
 
-    int f = sym_int("f");
+    int f = __WASP_symb_int("f");
 
     char str_f[] = {f, '\0'};
 
-    int g = sym_int("g");
+    int g = __WASP_symb_int("g");
 
     char str_g[] = {g, '\0'};
 
-    int h = sym_int("h");
+    int h = __WASP_symb_int("h");
 
     char str_h[] = {h, '\0'};
 
-    int i = sym_int("i");
+    int i = __WASP_symb_int("i");
 
     char str_i[] = {i, '\0'};
 
-    assume((!(strcmp(str_a, str_b) == 0)) && (!(strcmp(str_c, str_b) == 0)) &&
+    if (!((!(strcmp(str_a, str_b) == 0)) && (!(strcmp(str_c, str_b) == 0)) &&
            (!(strcmp(str_c, str_a) == 0)) && (!(strcmp(str_c, str_d) == 0)) &&
            (!(strcmp(str_d, str_b) == 0)) && (!(strcmp(str_a, str_h) == 0)) &&
            (!(strcmp(str_c, str_h) == 0)) && (!(strcmp(str_d, str_h) == 0)) &&
            (!(strcmp(str_b, str_h) == 0)) && (!(strcmp(str_i, str_e) == 0)) &&
-           (!(strcmp(str_i, str_g) == 0)) && (!(strcmp(str_i, str_f) == 0)));
+           (!(strcmp(str_i, str_g) == 0)) && (!(strcmp(str_i, str_f) == 0))))
+      return 0;
 
     array_add(v1, str_a);
     array_add(v1, str_b);
@@ -76,12 +77,12 @@ int main() {
 
     size_t index;
 
-    assert(CC_OK == array_index_of(v1, str_h, &index));
-    assert(1 == index);
-    assert(CC_OK == array_index_of(v2, str_i, &index));
-    assert(1 == index);
-    assert(1 == array_contains(v1, str_h));
-    assert(1 == array_contains(v2, str_i));
+    __WASP_assert(CC_OK == array_index_of(v1, str_h, &index));
+    __WASP_assert(1 == index);
+    __WASP_assert(CC_OK == array_index_of(v2, str_i, &index));
+    __WASP_assert(1 == index);
+    __WASP_assert(1 == array_contains(v1, str_h));
+    __WASP_assert(1 == array_contains(v2, str_i));
 
     array_destroy(v2);
 

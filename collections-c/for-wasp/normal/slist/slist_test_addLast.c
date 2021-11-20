@@ -1,5 +1,5 @@
 #include "slist.h"
-#include "mockups.h"
+#include <wasp.h>
 
 static SList *list;
 static SList *list2;
@@ -18,29 +18,29 @@ void teardown_test() {
 int main() {
     setup_test();
 
-    int a = sym_int("a");
-    int b = sym_int("b");
-    int c = sym_int("c");
-    int d = sym_int("d");
+    int a = __WASP_symb_int("a");
+    int b = __WASP_symb_int("b");
+    int c = __WASP_symb_int("c");
+    int d = __WASP_symb_int("d");
 
-    int p = sym_int("p");
+    int p = __WASP_symb_int("p");
 
     slist_add(list, &a);
     slist_add(list, &b);
     slist_add(list, &c);
     slist_add(list, &d);
 
-    assert(4 == slist_size(list));
+    __WASP_assert(4 == slist_size(list));
 
     int *last;
     slist_get_last(list, (void *)&last);
-    assert(d == *last);
+    __WASP_assert(d == *last);
 
     slist_add_last(list, &p);
-    assert(5 == slist_size(list));
+    __WASP_assert(5 == slist_size(list));
 
     slist_get_last(list, (void *)&last);
-    assert(p == *last);
+    __WASP_assert(p == *last);
 
     teardown_test();
     return 0;

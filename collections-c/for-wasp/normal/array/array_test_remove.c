@@ -1,5 +1,5 @@
 #include "array.h"
-#include "mockups.h"
+#include <wasp.h>
 
 static Array *v1;
 static Array *v2;
@@ -8,9 +8,9 @@ static int stat;
 
 int main() {
     stat = array_new(&v1);
-    int n = sym_int("n");
-    assume(n > 2);
-    assume(n < 16);
+    int n = __WASP_symb_int("n");
+    __WASP_assume(n > 2);
+    __WASP_assume(n < 16);
 
     int *last;
     int *next_to_last;
@@ -24,7 +24,7 @@ int main() {
 
     array_remove(v1, next_to_last, NULL);
 
-    assert(array_size(v1) < n);
+    __WASP_assert(array_size(v1) < n);
 
     array_destroy(v1);
 

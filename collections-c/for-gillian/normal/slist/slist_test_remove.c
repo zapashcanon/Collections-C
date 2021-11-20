@@ -58,7 +58,8 @@ void teardown_test() {
 int main() {
     setup_test();
 
-    ASSUME(b != a && b != c && b != d);
+    if (!(b != a && b != c && b != d))
+      return 0;
     int *e;
 
     ASSERT(CC_OK == slist_get_at(list, 1, (void *)&e));

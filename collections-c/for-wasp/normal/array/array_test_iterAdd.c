@@ -1,5 +1,5 @@
 #include "array.h"
-#include "mockups.h"
+#include <wasp.h>
 
 static Array *v1;
 static Array *v2;
@@ -9,14 +9,14 @@ static int stat;
 int main() {
     stat = array_new(&v1);
 
-    int a = sym_int("a");
-    int b = sym_int("b");
-    int c = sym_int("c");
-    int d = sym_int("d");
+    int a = __WASP_symb_int("a");
+    int b = __WASP_symb_int("b");
+    int c = __WASP_symb_int("c");
+    int d = __WASP_symb_int("d");
 
-    int N = sym_int("N");
+    int N = __WASP_symb_int("N");
 
-    assume(c != a && c != b && c != d && c != N);
+    __WASP_assume(c != a && c != b && c != d && c != N);
 
     array_add(v1, &a);
     array_add(v1, &b);
@@ -32,15 +32,15 @@ int main() {
             array_iter_add(&iter, &N);
     }
 
-    assert(5 == array_size(v1));
+    __WASP_assert(5 == array_size(v1));
 
     void *n;
     array_get_at(v1, 3, &n);
-    assert(N == *((int *)n));
-    assert(1 == array_contains(v1, &N));
+    __WASP_assert(N == *((int *)n));
+    __WASP_assert(1 == array_contains(v1, &N));
 
     array_get_at(v1, 4, (void *)&n);
-    assert(d == *((int *)n));
+    __WASP_assert(d == *((int *)n));
 
     array_destroy(v1);
 

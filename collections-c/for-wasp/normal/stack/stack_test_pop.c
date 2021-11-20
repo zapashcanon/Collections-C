@@ -1,5 +1,5 @@
 #include "stack.h"
-#include "mockups.h"
+#include <wasp.h>
 
 static Stack *s;
 
@@ -10,22 +10,22 @@ void teardown_tests() { stack_destroy(s); }
 int main() {
     setup_tests();
 
-    int a = sym_int("a");
-    int b = sym_int("b");
-    int c = sym_int("c");
+    int a = __WASP_symb_int("a");
+    int b = __WASP_symb_int("b");
+    int c = __WASP_symb_int("c");
 
-    stack_push(s, (void *)a);
-    stack_push(s, (void *)b);
-    stack_push(s, (void *)c);
+    stack_push(s, (void *)&a);
+    stack_push(s, (void *)&b);
+    stack_push(s, (void *)&c);
 
     int *pop;
     int *peek;
 
     stack_pop(s, (void *)&pop);
-    assert(c == pop);
+    __WASP_assert(&c == pop);
 
     stack_peek(s, (void *)&peek);
-    assert(b == peek);
+    __WASP_assert(&b == peek);
 
     teardown_tests();
     return 0;

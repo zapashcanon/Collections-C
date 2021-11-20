@@ -1,5 +1,5 @@
 #include "array.h"
-#include "mockups.h"
+#include <wasp.h>
 
 static Array *v1;
 static Array *v2;
@@ -8,11 +8,11 @@ static int stat;
 
 int main() {
     stat = array_new(&v1);
-    assert(stat == CC_OK);
+    __WASP_assert(stat == CC_OK);
 
-    int a = sym_int("a");
-    int b = sym_int("b");
-    int c = sym_int("c");
+    int a = __WASP_symb_int("a");
+    int b = __WASP_symb_int("b");
+    int c = __WASP_symb_int("c");
 
     array_add(v1, &a);
     array_add(v1, &b);
@@ -26,9 +26,9 @@ int main() {
     array_get_at(v1, 1, (void *)&br);
     array_get_at(v1, 2, (void *)&cr);
 
-    assert(a == *ar);
-    assert(b == *br);
-    assert(c == *cr);
+    __WASP_assert(a == *ar);
+    __WASP_assert(b == *br);
+    __WASP_assert(c == *cr);
 
     array_destroy(v1);
 

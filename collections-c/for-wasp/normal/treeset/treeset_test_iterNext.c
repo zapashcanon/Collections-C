@@ -1,17 +1,17 @@
 #include "treeset.h"
 #include "utils.h"
-#include "mockups.h"
+#include <wasp.h>
 
 static TreeSet *set;
 
 int main() {
     treeset_new(cmp, &set);
 
-    int a = sym_int("a");
-    int b = sym_int("b");
-    int c = sym_int("c");
-    int d = sym_int("d");
-    assume(a < b && b < c && c < d);
+    int a = __WASP_symb_int("a");
+    int b = __WASP_symb_int("b");
+    int c = __WASP_symb_int("c");
+    int d = __WASP_symb_int("d");
+    __WASP_assume(a < b && b < c && c < d);
 
     treeset_add(set, &a);
     treeset_add(set, &b);
@@ -41,8 +41,8 @@ int main() {
             four++;
     }
 
-    assert(1 == one);
-    assert(1 == two);
-    assert(1 == three);
-    assert(1 == four);
+    __WASP_assert(1 == one);
+    __WASP_assert(1 == two);
+    __WASP_assert(1 == three);
+    __WASP_assert(1 == four);
 }

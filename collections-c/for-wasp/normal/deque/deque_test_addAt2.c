@@ -1,5 +1,5 @@
 #include "deque.h"
-#include "mockups.h"
+#include <wasp.h>
 
 static Deque *deque;
 static DequeConf conf;
@@ -12,13 +12,13 @@ void teardown_tests() { deque_destroy(deque); }
 int main() {
     setup_tests();
 
-    int a = sym_int("a");
-    int b = sym_int("b");
-    int c = sym_int("c");
-    int d = sym_int("d");
-    int e = sym_int("e");
-    int f = sym_int("f");
-    int g = sym_int("g");
+    int a = __WASP_symb_int("a");
+    int b = __WASP_symb_int("b");
+    int c = __WASP_symb_int("c");
+    int d = __WASP_symb_int("d");
+    int e = __WASP_symb_int("e");
+    int f = __WASP_symb_int("f");
+    int g = __WASP_symb_int("g");
 
     deque_add_last(deque, &a);
     deque_add_last(deque, &b);
@@ -32,16 +32,16 @@ int main() {
     const void *const *buff = deque_get_buffer(deque);
     const void *elem = buff[5];
 
-    assert(elem == &g);
+    __WASP_assert(elem == &g);
 
     const void *elem1 = buff[0];
-    assert(elem1 == &a);
+    __WASP_assert(elem1 == &a);
 
     const void *elem2 = buff[7];
-    assert(elem2 == &c);
+    __WASP_assert(elem2 == &c);
 
     const void *elem3 = buff[3];
-    assert(elem3 == &f);
+    __WASP_assert(elem3 == &f);
 
     teardown_tests();
     return 0;

@@ -1,5 +1,5 @@
 #include "slist.h"
-#include "mockups.h"
+#include <wasp.h>
 
 static SList *list;
 static SList *list2;
@@ -16,14 +16,14 @@ int a, b, c, d, e, f, g, h;
 void setup_test() {
     slist_new(&list), slist_new(&list2);
 
-    a = sym_int("a");
-    b = sym_int("b");
-    c = sym_int("c");
-    d = sym_int("d");
-    e = sym_int("e");
-    f = sym_int("f");
-    g = sym_int("g");
-    h = sym_int("h");
+    a = __WASP_symb_int("a");
+    b = __WASP_symb_int("b");
+    c = __WASP_symb_int("c");
+    d = __WASP_symb_int("d");
+    e = __WASP_symb_int("e");
+    f = __WASP_symb_int("f");
+    g = __WASP_symb_int("g");
+    h = __WASP_symb_int("h");
 
     int *va = (int *)malloc(sizeof(int));
     int *vb = (int *)malloc(sizeof(int));
@@ -62,28 +62,28 @@ void teardown_test() {
 };
 
 void CHECK_EQ_LIST(SList *l1, SList *l2) {
-    assert(slist_size(l1) == slist_size(l2));
+    __WASP_assert(slist_size(l1) == slist_size(l2));
     SListZipIter zip;
     slist_zip_iter_init(&zip, l1, l2);
     void *e1, *e2;
     while (slist_zip_iter_next(&zip, &e1, &e2) != CC_ITER_END) {
-        assert(e1 == e2);
+        __WASP_assert(e1 == e2);
     }
 }
 
 int main() {
     setup_test();
 
-    assume(a != 0 && b != 0 && c != 0 && d != 0);
+    __WASP_assume(a != 0 && b != 0 && c != 0 && d != 0);
 
-    assert(4 == slist_size(list));
+    __WASP_assert(4 == slist_size(list));
     slist_filter_mut(list, pred1);
 
-    assert(0 == slist_size(list));
+    __WASP_assert(0 == slist_size(list));
 
     void *e = NULL;
     slist_get_first(list, &e);
-    assert(e == NULL);
+    __WASP_assert(e == NULL);
 
     teardown_test();
     return 0;

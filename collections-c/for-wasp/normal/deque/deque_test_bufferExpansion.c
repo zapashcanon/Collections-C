@@ -1,5 +1,5 @@
 #include "deque.h"
-#include "mockups.h"
+#include <wasp.h>
 
 static Deque *deque;
 static DequeConf conf;
@@ -16,12 +16,12 @@ void teardown_tests() { deque_destroy(deque); }
 int main() {
     setup_tests();
 
-    int a = sym_int("a");
-    int b = sym_int("b");
-    int c = sym_int("c");
-    int d = sym_int("d");
-    int e = sym_int("e");
-    int f = sym_int("f");
+    int a = __WASP_symb_int("a");
+    int b = __WASP_symb_int("b");
+    int c = __WASP_symb_int("c");
+    int d = __WASP_symb_int("d");
+    int e = __WASP_symb_int("e");
+    int f = __WASP_symb_int("f");
 
     deque_add_first(deque, &a);
     deque_add_last(deque, &b);
@@ -30,7 +30,7 @@ int main() {
 
     size_t capacity = deque_capacity(deque);
 
-    assert(4 == capacity);
+    __WASP_assert(4 == capacity);
 
     /* Current layout:
        _________________
@@ -42,30 +42,30 @@ int main() {
     deque_add_first(deque, &e);
 
     capacity = deque_capacity(deque);
-    assert(8 == capacity);
+    __WASP_assert(8 == capacity);
 
     /* The expansion should align the elements.*/
     const void *const *buff = deque_get_buffer(deque);
     const int elem = *((int *)buff[0]);
 
-    assert(elem == c);
+    __WASP_assert(elem == c);
 
     const int elem1 = *((int *)buff[1]);
-    assert(elem1 == a);
+    __WASP_assert(elem1 == a);
 
     const int elem2 = *((int *)buff[2]);
-    assert(elem2 == b);
+    __WASP_assert(elem2 == b);
 
     const int elem3 = *((int *)buff[3]);
-    assert(elem3 == d);
+    __WASP_assert(elem3 == d);
 
     const int elem4 = *((int *)buff[7]);
-    assert(elem4 == e);
+    __WASP_assert(elem4 == e);
 
     deque_add_last(deque, &f);
 
     const int elem5 = *((int *)buff[4]);
-    assert(elem5 == f);
+    __WASP_assert(elem5 == f);
 
     teardown_tests();
     return 0;

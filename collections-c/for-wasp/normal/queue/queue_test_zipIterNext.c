@@ -1,6 +1,6 @@
 #include "queue.h"
 #include "utils.h"
-#include "mockups.h"
+#include <wasp.h>
 
 static Queue *q;
 static Queue *q2;
@@ -19,25 +19,25 @@ void teardown_test() {
 int main() {
     setup_test();
 
-    int a = sym_int("a");
+    int a = __WASP_symb_int("a");
     char str_a[] = {a, '\0'};
 
-    int b = sym_int("b");
+    int b = __WASP_symb_int("b");
     char str_b[] = {b, '\0'};
 
-    int c = sym_int("c");
+    int c = __WASP_symb_int("c");
     char str_c[] = {c, '\0'};
 
-    int d = sym_int("d");
+    int d = __WASP_symb_int("d");
     char str_d[] = {d, '\0'};
 
-    int e = sym_int("e");
+    int e = __WASP_symb_int("e");
     char str_e[] = {e, '\0'};
 
-    int f = sym_int("f");
+    int f = __WASP_symb_int("f");
     char str_f[] = {f, '\0'};
 
-    int g = sym_int("g");
+    int g = __WASP_symb_int("g");
     char str_g[] = {g, '\0'};
 
     queue_enqueue(q, str_a);
@@ -57,16 +57,16 @@ int main() {
     void *e1, *e2;
     while (queue_zip_iter_next(&zip, &e1, &e2) != CC_ITER_END) {
         if (i == 0) {
-            assert(strcmp(str_d, (char *)e1) == 0);
-            assert(strcmp(str_g, (char *)e2) == 0);
+            __WASP_assert(strcmp(str_d, (char *)e1) == 0);
+            __WASP_assert(strcmp(str_g, (char *)e2) == 0);
         }
         if (i == 2) {
-            assert(strcmp(str_b, (char *)e1) == 0);
-            assert(strcmp(str_e, (char *)e2) == 0);
+            __WASP_assert(strcmp(str_b, (char *)e1) == 0);
+            __WASP_assert(strcmp(str_e, (char *)e2) == 0);
         }
         i++;
     }
-    assert(3 == i);
+    __WASP_assert(3 == i);
 
     teardown_test();
     return 0;

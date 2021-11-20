@@ -1,6 +1,6 @@
 #include "list.h"
 #include "utils.h"
-#include "mockups.h"
+#include <wasp.h>
 
 static List *list1;
 static List *list2;
@@ -15,56 +15,56 @@ void teardown_test() {
 int main() {
     setup_tests();
 
-    int a = sym_int("a");
+    int a = __WASP_symb_int("a");
 
     char str_a[] = {a, '\0'};
 
-    int b = sym_int("b");
+    int b = __WASP_symb_int("b");
 
     char str_b[] = {b, '\0'};
 
-    int c = sym_int("c");
+    int c = __WASP_symb_int("c");
 
     char str_c[] = {c, '\0'};
 
-    int d = sym_int("d");
+    int d = __WASP_symb_int("d");
 
     char str_d[] = {d, '\0'};
 
-    int e = sym_int("e");
+    int e = __WASP_symb_int("e");
 
     char str_e[] = {e, '\0'};
 
-    int f = sym_int("f");
+    int f = __WASP_symb_int("f");
 
     char str_f[] = {f, '\0'};
 
-    int g = sym_int("g");
+    int g = __WASP_symb_int("g");
 
     char str_g[] = {g, '\0'};
 
-    int h = sym_int("h");
+    int h = __WASP_symb_int("h");
 
     char str_h[] = {h, '\0'};
 
-    int i = sym_int("i");
+    int i = __WASP_symb_int("i");
 
     char str_i[] = {i, '\0'};
 
-    int x = sym_int("x");
+    int x = __WASP_symb_int("x");
 
     char str_x[] = {x, '\0'};
 
-    int y = sym_int("y");
+    int y = __WASP_symb_int("y");
 
     char str_y[] = {y, '\0'};
 
-    assume(a != b && a != c && a != d && a != h && a != x);
-    assume(b != c && b != d && b != h && b != x);
-    assume(c != d && c != h && c != x);
-    assume(d != h && d != x && h != x);
+    __WASP_assume(a != b && a != c && a != d && a != h && a != x);
+    __WASP_assume(b != c && b != d && b != h && b != x);
+    __WASP_assume(c != d && c != h && c != x);
+    __WASP_assume(d != h && d != x && h != x);
 
-    assume(e != f && e != g && e != i && e != y && f != g && f != i && f != y &&
+    __WASP_assume(e != f && e != g && e != i && e != y && f != g && f != i && f != y &&
            g != i && g != y && i != y);
 
     list_add(list1, str_a);
@@ -86,19 +86,19 @@ int main() {
     }
 
     size_t index;
-    assert(CC_OK == list_index_of(list1, str_h, zero_if_ptr_eq, &index));
-    assert(2 == index);
+    __WASP_assert(CC_OK == list_index_of(list1, str_h, zero_if_ptr_eq, &index));
+    __WASP_assert(2 == index);
 
-    assert(CC_OK == list_index_of(list1, str_i, zero_if_ptr_eq, &index));
-    assert(2 == index);
+    __WASP_assert(CC_OK == list_index_of(list1, str_i, zero_if_ptr_eq, &index));
+    __WASP_assert(2 == index);
 
-    assert(CC_OK == list_index_of(list1, str_c, zero_if_ptr_eq, &index));
-    assert(3 == index);
+    __WASP_assert(CC_OK == list_index_of(list1, str_c, zero_if_ptr_eq, &index));
+    __WASP_assert(3 == index);
 
-    assert(1 == list_contains(list1, str_h));
-    assert(1 == list_contains(list2, str_i));
-    assert(5 == list_size(list1));
-    assert(4 == list_size(list2));
+    __WASP_assert(1 == list_contains(list1, str_h));
+    __WASP_assert(1 == list_contains(list2, str_i));
+    __WASP_assert(5 == list_size(list1));
+    __WASP_assert(4 == list_size(list2));
 
     list_zip_iter_init(&zip, list1, list2);
     while (list_zip_iter_next(&zip, &e1, &e2) != CC_ITER_END) {

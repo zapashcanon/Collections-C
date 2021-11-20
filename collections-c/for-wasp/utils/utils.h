@@ -1,14 +1,14 @@
 #ifndef TEST_UTILS_H
 #define TEST_UTILS_H
 
-#include "mockups.h"
+#include <wasp.h>
 
 #define symb_str(X)                                                            \
-    int X = sym_int("X");                      \
+    int X = __WASP_symb_int("X");                      \
     char str_##X[] = {X, '\0'}
 
 #define symb_uint(X)                                                           \
-    uint64_t X = sym_int("X");
+    uint64_t X = __WASP_symb_int("X");
 
 void CHECK_EQUAL_C_STRING(char *s1, char *s2);
 

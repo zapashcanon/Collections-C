@@ -1,5 +1,5 @@
 #include "array.h"
-#include "mockups.h"
+#include <wasp.h>
 
 static Array *v1;
 static Array *v2;
@@ -9,9 +9,9 @@ static int stat;
 int main() {
     stat = array_new(&v1);
 
-    int a = sym_int("a");
-    assert(0 == array_size(v1));
-    assert(CC_ERR_OUT_OF_RANGE == array_add_at(v1, &a, 1));
+    int a = __WASP_symb_int("a");
+    __WASP_assert(0 == array_size(v1));
+    __WASP_assert(CC_ERR_OUT_OF_RANGE == array_add_at(v1, &a, 1));
 
     array_destroy(v1);
 

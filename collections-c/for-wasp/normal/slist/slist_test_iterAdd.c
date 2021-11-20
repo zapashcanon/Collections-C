@@ -1,5 +1,5 @@
 #include "slist.h"
-#include "mockups.h"
+#include <wasp.h>
 
 static SList *list;
 static SList *list2;
@@ -10,14 +10,14 @@ int a, b, c, d, e, f, g, h;
 void setup_test() {
     slist_new(&list), slist_new(&list2);
 
-    a = sym_int("a");
-    b = sym_int("b");
-    c = sym_int("c");
-    d = sym_int("d");
-    e = sym_int("e");
-    f = sym_int("f");
-    g = sym_int("g");
-    h = sym_int("h");
+    a = __WASP_symb_int("a");
+    b = __WASP_symb_int("b");
+    c = __WASP_symb_int("c");
+    d = __WASP_symb_int("d");
+    e = __WASP_symb_int("e");
+    f = __WASP_symb_int("f");
+    g = __WASP_symb_int("g");
+    h = __WASP_symb_int("h");
 
     int *va = (int *)malloc(sizeof(int));
     int *vb = (int *)malloc(sizeof(int));
@@ -58,7 +58,7 @@ void teardown_test() {
 int main() {
     setup_test();
 
-    int i = sym_int("i");
+    int i = __WASP_symb_int("i");
     int *i1 = (int *)malloc(sizeof(int));
 
     *i1 = i;
@@ -66,7 +66,7 @@ int main() {
     SListIter iter;
     slist_iter_init(&iter, list);
 
-    assume(c != a && c != b && c != d && d != a && d != b &&
+    __WASP_assume(c != a && c != b && c != d && d != a && d != b &&
            d != i);
 
     int *el;
@@ -74,17 +74,17 @@ int main() {
         if (*el == c)
             slist_iter_add(&iter, i1);
     }
-    assert(5 == slist_size(list));
+    __WASP_assert(5 == slist_size(list));
 
     int *li3;
     slist_get_at(list, 3, (void *)&li3);
-    assert(*li3 == i);
+    __WASP_assert(*li3 == i);
 
     int *li4;
     slist_get_at(list, 4, (void *)&li4);
-    assert(d == *li4);
+    __WASP_assert(d == *li4);
 
-    int x = sym_int("x");
+    int x = __WASP_symb_int("x");
     int *i2 = (int *)malloc(sizeof(int));
 
     *i2 = x;
@@ -97,8 +97,8 @@ int main() {
 
     void *e;
     slist_get_last(list, &e);
-    assert(x == *(int *)e);
-    assert(6 == slist_size(list));
+    __WASP_assert(x == *(int *)e);
+    __WASP_assert(6 == slist_size(list));
 
     teardown_test();
     return 0;

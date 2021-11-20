@@ -1,5 +1,5 @@
 #include "list.h"
-#include "mockups.h"
+#include <wasp.h>
 
 static List *list1;
 static List *list2;
@@ -14,14 +14,15 @@ void teardown_test() {
 int main() {
     setup_tests();
 
-    int a = sym_int("a");
-    int b = sym_int("b");
-    int c = sym_int("c");
-    int d = sym_int("d");
-    int e = sym_int("e");
+    int a = __WASP_symb_int("a");
+    int b = __WASP_symb_int("b");
+    int c = __WASP_symb_int("c");
+    int d = __WASP_symb_int("d");
+    int e = __WASP_symb_int("e");
 
-    assume(a != b && a != c && a != d && a != e && b != c && b != d && b != e &&
-           c != d && c != e && d != e);
+    if (!(a != b && a != c && a != d && a != e && b != c && b != d && b != e &&
+           c != d && c != e && d != e))
+      return 0;
 
     list_add(list1, &a);
     list_add(list1, &b);
@@ -29,9 +30,9 @@ int main() {
     list_add(list1, &c);
     list_add(list1, &d);
 
-    assert(2 == list_contains(list1, &b));
-    assert(1 == list_contains(list1, &d));
-    assert(0 == list_contains(list1, &e));
+    __WASP_assert(2 == list_contains(list1, &b));
+    __WASP_assert(1 == list_contains(list1, &d));
+    __WASP_assert(0 == list_contains(list1, &e));
 
     teardown_test();
 }

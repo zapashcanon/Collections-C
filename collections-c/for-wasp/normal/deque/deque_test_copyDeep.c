@@ -1,6 +1,6 @@
 #include "deque.h"
 #include "utils.h"
-#include "mockups.h"
+#include <wasp.h>
 
 static Deque *deque;
 static DequeConf conf;
@@ -17,9 +17,9 @@ int main() {
     int *b = malloc(sizeof(int));
     int *c = malloc(sizeof(int));
 
-    int x = sym_int("x");
-    int y = sym_int("y");
-    int z = sym_int("z");
+    int x = __WASP_symb_int("x");
+    int y = __WASP_symb_int("y");
+    int z = __WASP_symb_int("z");
 
     *a = x;
     *b = y;
@@ -33,7 +33,7 @@ int main() {
     deque_copy_deep(deque, copy, &cpy);
 
     int size = deque_size(cpy);
-    assert(3 == size);
+    __WASP_assert(3 == size);
 
     int *ca;
     deque_get_at(cpy, 0, (void *)&ca);
@@ -42,9 +42,9 @@ int main() {
     int *cc;
     deque_get_at(cpy, 2, (void *)&cc);
 
-    assert(x == *ca);
-    assert(y == *cb);
-    assert(z == *cc);
+    __WASP_assert(x == *ca);
+    __WASP_assert(y == *cb);
+    __WASP_assert(z == *cc);
     deque_destroy_cb(cpy, free);
     free(a);
     free(b);

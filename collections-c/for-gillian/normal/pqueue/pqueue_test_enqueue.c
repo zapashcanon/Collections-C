@@ -1,7 +1,11 @@
 #include "pqueue.h"
 #include <gillian-c/gillian-c.h>
 
-static struct Pair { int a, b; } A, B, C;
+struct Pair {
+  int a, b;
+};
+
+static struct Pair A, B, C;
 
 static int comp(const void *a, const void *b) {
     int alpha1 = ((struct Pair *)a)->a, beta1 = ((struct Pair *)a)->b;

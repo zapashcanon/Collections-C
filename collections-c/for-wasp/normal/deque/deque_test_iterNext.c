@@ -1,5 +1,5 @@
 #include "deque.h"
-#include "mockups.h"
+#include <wasp.h>
 
 static Deque *deque;
 static DequeConf conf;
@@ -12,12 +12,12 @@ void teardown_tests() { deque_destroy(deque); }
 int main() {
     setup_tests();
 
-    int a = sym_int("a");
-    int b = sym_int("b");
-    int c = sym_int("c");
-    int d = sym_int("d");
-    int e = sym_int("e");
-    int f = sym_int("f");
+    int a = __WASP_symb_int("a");
+    int b = __WASP_symb_int("b");
+    int c = __WASP_symb_int("c");
+    int d = __WASP_symb_int("d");
+    int e = __WASP_symb_int("e");
+    int f = __WASP_symb_int("f");
 
     deque_add(deque, &a);
     deque_add(deque, &b);
@@ -26,7 +26,8 @@ int main() {
     deque_add(deque, &e);
     deque_add(deque, &f);
 
-    assume(d != a && d != b && d != c && d != e && d != f);
+    if (!(d != a && d != b && d != c && d != e && d != f))
+      return 0;
 
     DequeIter iter;
     deque_iter_init(&iter, deque);
@@ -37,10 +38,10 @@ int main() {
     while (deque_iter_next(&iter, &el) != CC_ITER_END) {
         void *k;
         deque_get_at(deque, i, &k);
-        assert(k == el);
+        __WASP_assert(k == el);
         i++;
 
-        assert(i == iter.index);
+        __WASP_assert(i == iter.index);
     }
 
     teardown_tests();
