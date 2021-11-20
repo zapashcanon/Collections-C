@@ -20,9 +20,8 @@ int main() {
     int d = __builtin_annot_intval("symb_int", d);
     int e = __builtin_annot_intval("symb_int", e);
 
-    if (!(a != b && a != c && a != d && a != e && b != c && b != d && b != e &&
-           c != d && c != e && d != e))
-      return 0;
+    ASSUME (a != b && a != c && a != d && a != e && b != c && b != d && b != e &&
+           c != d && c != e && d != e);
 
     list_add(list1, &a);
     list_add(list1, &b);

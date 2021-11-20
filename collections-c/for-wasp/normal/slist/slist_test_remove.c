@@ -58,8 +58,7 @@ void teardown_test() {
 int main() {
     setup_test();
 
-    if (!(b != a && b != c && b != d))
-      return 0;
+    __WASP_assume(b != a && b != c && b != d);
     int *e;
 
     __WASP_assert(CC_OK == slist_get_at(list, 1, (void *)&e));

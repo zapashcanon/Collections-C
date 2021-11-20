@@ -45,13 +45,12 @@ int main() {
 
     char str_i[] = {i, '\0'};
 
-    if (!((!(strcmp(str_a, str_b) == 0)) && (!(strcmp(str_c, str_b) == 0)) &&
+    ASSUME ((!(strcmp(str_a, str_b) == 0)) && (!(strcmp(str_c, str_b) == 0)) &&
            (!(strcmp(str_c, str_a) == 0)) && (!(strcmp(str_c, str_d) == 0)) &&
            (!(strcmp(str_d, str_b) == 0)) && (!(strcmp(str_a, str_h) == 0)) &&
            (!(strcmp(str_c, str_h) == 0)) && (!(strcmp(str_d, str_h) == 0)) &&
            (!(strcmp(str_b, str_h) == 0)) && (!(strcmp(str_i, str_e) == 0)) &&
-           (!(strcmp(str_i, str_g) == 0)) && (!(strcmp(str_i, str_f) == 0))))
-      return 0;
+           (!(strcmp(str_i, str_g) == 0)) && (!(strcmp(str_i, str_f) == 0)));
 
     array_add(v1, str_a);
     array_add(v1, str_b);

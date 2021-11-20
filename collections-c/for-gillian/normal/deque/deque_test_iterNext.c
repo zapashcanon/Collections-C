@@ -26,8 +26,7 @@ int main() {
     deque_add(deque, &e);
     deque_add(deque, &f);
 
-    if (!(d != a && d != b && d != c && d != e && d != f))
-      return 0;
+    ASSUME (d != a && d != b && d != c && d != e && d != f);
 
     DequeIter iter;
     deque_iter_init(&iter, deque);

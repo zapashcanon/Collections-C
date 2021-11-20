@@ -20,9 +20,8 @@ int main() {
     int d = __WASP_symb_int("d");
     int e = __WASP_symb_int("e");
 
-    if (!(a != b && a != c && a != d && a != e && b != c && b != d && b != e &&
-           c != d && c != e && d != e))
-      return 0;
+    __WASP_assume(a != b && a != c && a != d && a != e && b != c && b != d && b != e &&
+           c != d && c != e && d != e);
 
     list_add(list1, &a);
     list_add(list1, &b);

@@ -57,8 +57,7 @@ void teardown_test() {
 int main() {
     setup_tests();
 
-    if (!(b != a && b != c && b != d))
-      return 0;
+    __WASP_assume(b != a && b != c && b != d);
 
     int *e;
     list_get_at(list1, 1, (void *)&e);
