@@ -11,11 +11,11 @@ errors = list()
 #-----------------------------------------------------------
 
 # helpers --------------------------------------------------
-cmd  = lambda p : [f'./{ROOT_DIR}/wasp', p, '-u','-e', '(invoke \"__original_main\")', \
-                   '-m', str(INSTR_MAX)]
-def run(test : str):
+cmd  = lambda p, r : [f'./{ROOT_DIR}/wasp', p, '-u','-e', '(invoke \"__original_main\")', \
+                   '-m', str(INSTR_MAX), '-r', r]
+def run(test : str, r:str):
     try:
-        out = subprocess.check_output(cmd(test), timeout=TIMEOUT, \
+        out = subprocess.check_output(cmd(test, r), timeout=TIMEOUT, \
                 stderr=subprocess.STDOUT)
     except (subprocess.CalledProcessError, \
             subprocess.TimeoutExpired) as e:
@@ -35,18 +35,18 @@ for dir in dirs:
     sum_solver_time = 0.0
     tests = glob.glob(f'{dir}/*.wat')
     for test in tests:
+        out_dir = os.path.join('output', os.path.basename(test))
         t0    = time.time()
-        out   = run(test)
+        out   = run(test, out_dir)
         delta = time.time() - t0
         
         # Oh no! we crashed!!
-        out_dir = f'output/{os.path.basename(test)}'
-        if not os.path.exists(out_dir + '/report.json'):
+        if not os.path.exists(os.path.join(out_dir, 'report.json')):
             errors.append(test)
             logging.info(f'Crashed/Timeout {os.path.basename(test)}')
             continue
         
-        with open(f'{out_dir}/report.json', 'r') as f:
+        with open(os.path.join(out_dir, 'report.json'), 'r') as f:
             try:
                 report = json.load(f)
             except json.decoder.JSONDecodeError:
