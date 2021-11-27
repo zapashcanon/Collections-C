@@ -16,17 +16,17 @@ int main() {
 
     int *p;
 
-    stack_push(s, (void *)a);
+    stack_push(s, (void *)&a);
     stack_peek(s, (void *)&p);
-    assert(a == p);
+    assert(&a == p);
 
-    stack_push(s, (void *)b);
+    stack_push(s, (void *)&b);
     stack_peek(s, (void *)&p);
-    assert(b == p);
+    assert(&b == p);
 
-    stack_push(s, (void *)c);
+    stack_push(s, (void *)&c);
     stack_peek(s, (void *)&p);
-    assert(c == p);
+    assert(&c == p);
 
     teardown_tests();
     return 0;

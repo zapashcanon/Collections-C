@@ -62,7 +62,7 @@ $(BUILD_DIR)/for-wasp/bugs/%.bc: for-wasp/bugs/%.c
 
 $(BUILD_DIR)/for-wasp/bugs/%.wasm: $(BUILD_DIR)/for-wasp/bugs/%.o $(libbugo) $(BUILD_DIR)/for-wasp/utils/utils.o $(BUILD_DIR)/for-wasp/mockups/mockups.o
 	@echo "Building $@"
-	@$(LD) --no-entry --export-all $^ -o $@
+	@$(LD) --no-entry --export=__original_main $^ -o $@
 
 # NORMAL
 
@@ -73,7 +73,7 @@ $(BUILD_DIR)/for-wasp/normal/%.bc: for-wasp/normal/%.c
 
 $(BUILD_DIR)/for-wasp/normal/%.wasm: $(BUILD_DIR)/for-wasp/normal/%.o $(libo) $(BUILD_DIR)/for-wasp/utils/utils.o $(BUILD_DIR)/for-wasp/mockups/mockups.o
 	@echo "Building $@"
-	@$(LD) --no-entry --export-all $^ -o $@
+	@$(LD) --no-entry --export=__original_main $^ -o $@
 
 # GENERIC BUILD
 
