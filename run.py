@@ -1,78 +1,106 @@
 #!/usr/bin/env python3
-import glob, sys, time, json, subprocess, os, csv, logging
+import os
+import sys
+import csv
+import time
+import glob
+import json
+import logging
+import subprocess
 
-# globals --------------------------------------------------
-TIMEOUT=20
+TIMEOUT=60
 INSTR_MAX=10000000
-ROOT_DIR = '../wasp'
-dirs = glob.glob(f'_build/for-wasp/normal/*')
-table = [['category', 'tests', 'paths', 'T', 'L', 'S']]
-errors = list()
-#-----------------------------------------------------------
 
-# helpers --------------------------------------------------
-cmd  = lambda p, r : [f'./{ROOT_DIR}/wasp', p, '-u','-e', '(invoke \"__original_main\")', \
-                   '-m', str(INSTR_MAX), '-r', r]
-def run(test : str, r:str):
+def cmd(test: str, out_dir: str):
+    return [
+        'wasp',
+        test,
+        '-u',
+        '-e',
+        '(invoke \"__original_main\")',
+        '-m', str(INSTR_MAX),
+        '-r', out_dir
+    ]
+
+def run(test: str, out_dir: str):
     try:
-        out = subprocess.check_output(cmd(test, r), timeout=TIMEOUT, \
+        out = subprocess.check_output(cmd(test, out_dir), timeout=TIMEOUT, \
                 stderr=subprocess.STDOUT)
     except (subprocess.CalledProcessError, \
             subprocess.TimeoutExpired) as e:
         return None
     return out
-#-----------------------------------------------------------
 
-# main -----------------------------------------------------
-fmt = '%(asctime)s: %(message)s'
-date_fmt = '%H:%M:%S'
-logging.basicConfig(format=fmt, level=logging.INFO, \
-        datefmt=date_fmt)
+def main(argv):
+    logging.basicConfig(
+        format='%(asctime)s: %(message)s', 
+        level=logging.INFO,
+        datefmt='%H:%M:%S'
+    )
 
-for dir in dirs:
-    sum_paths, sum_time = 0, 0.0
-    sum_loop_time = 0.0
-    sum_solver_time = 0.0
-    tests = glob.glob(f'{dir}/*.wat')
-    for test in tests:
-        out_dir = os.path.join('output', os.path.basename(test))
-        t0    = time.time()
-        out   = run(test, out_dir)
-        delta = time.time() - t0
-        
-        # Oh no! we crashed!!
-        if not os.path.exists(os.path.join(out_dir, 'report.json')):
-            errors.append(test)
-            logging.info(f'Crashed/Timeout {os.path.basename(test)}')
-            continue
-        
-        with open(os.path.join(out_dir, 'report.json'), 'r') as f:
-            try:
-                report = json.load(f)
-            except json.decoder.JSONDecodeError:
-                logging.info(f'Thread {i}: Can not read report \'{out_dir}/report.json\'.')
+    dirs = glob.glob('_build/for-wasp/normal/*')
+    if argv != []:
+        dirs = argv
 
-        if not report['specification']:
-            errors.append(test)
+    table = [['category', 'ni', 'avg-paths', 'Twasp', 'Tloop', 'Tsolver']]
+    errors = []
+    for dir in dirs:
+        sum_paths = 0
+        sum_twasp = 0.0
+        sum_tloop = 0.0
+        sum_tsolv = 0.0
 
-        sum_time += delta
-        sum_paths += report['paths_explored']
-        sum_loop_time += float(report['loop_time'])
-        sum_solver_time += float(report['solver_time'])
+        tests = glob.glob(os.path.join(dir, '*.wat'))
+        for test in tests:
+            out_dir = os.path.join('output', os.path.basename(test))
+            tstart = time.time()
+            out = run(test, out_dir)
+            tdelta = time.time() - tstart
 
-        logging.info(f'Test {os.path.basename(test)} ' \
-              f'({"OK" if report["specification"] else "NOK"}, ' \
-              f'T={round(delta,2)}s, L={float(report["loop_time"])}, S={float(report["solver_time"])}' \
-              f'{report["instruction_counter"]})')
+            report_file = os.path.join(out_dir, 'report.json')
+            if not os.path.exists(report_file):
+                errors.append(test)
+                logging.info(f'No generated for available for \'{test}\'.')
+                continue
+            
+            with open(report_file, 'r') as f:
+                try:
+                    report = json.load(f)
+                except json.decoder.JSONDecodeError:
+                    logging.info(f'Unable to parse \'{report_file}\'.')
+                    continue
 
-    table.append([f'{os.path.basename(dir)}', len(tests), \
-            int(sum_paths/len(tests)), round(sum_time, 3), \
-            round(sum_loop_time, 3), round(sum_solver_time, 3)])
+            # A test specification was violated
+            if not report['specification']:
+                errors.append(test)
 
-with open('table.csv', 'w', newline='') as f:
-    writer = csv.writer(f)
-    writer.writerows(table)
+            sum_paths += report['paths_explored']
+            sum_twasp += tdelta
+            sum_tloop += float(report['loop_time'])
+            sum_tsolv += float(report['solver_time'])
 
-for err in errors:
-    logging.info('Failed Test: ' + err)
-#-----------------------------------------------------------
+            logging.info(
+                f'Test {os.path.basename(test)} ' \
+                f'({report["specification"]}, ' \
+                f'twasp={round(tdelta, 2)}, tloop={float(report["loop_time"])} ' \
+                f'tsolver={float(report["solver_time"])} ' \
+                f'icnt={report["instruction_counter"]})'
+            )
+        table.append([
+            os.path.basename(test),
+            len(tests),
+            int(sum_paths/len(tests)),
+            round(sum_twasp, 3),
+            round(sum_tloop, 3),
+            round(sum_tsolv, 3)
+        ])
+    
+    logging.info('Writing results to \'table.csv\'.')
+    with open('table.csv', 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerows(table)
+
+    logging.info('Failed tests: ' + str(errors))
+
+if __name__ == '__main__':
+    main(sys.argv[1:])
