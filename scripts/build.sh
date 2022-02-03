@@ -3,6 +3,6 @@
 rm -v -rf for-wasp 
 cp -v -R for-gillian for-wasp
 
-./for_wasp.py
+time ./scripts/patch_c.py for-wasp
 
 make -j$(nproc)

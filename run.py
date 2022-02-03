@@ -5,102 +5,147 @@ import csv
 import time
 import glob
 import json
-import logging
 import subprocess
 
-TIMEOUT=60
-INSTR_MAX=10000000
+# Globals
+MAPPING = {
+    'black'  : 90,
+    'red'    : 91,
+    'green'  : 92,
+    'yellow' : 93,
+    'blue'   : 94,
+    'purple' : 95,
+    'cyan'   : 96,
+    'white'  : 97
+}
 
-def cmd(test: str, out_dir: str):
-    return [
-        'wasp',
-        test,
-        '-u',
-        '-e',
-        '(invoke \"__original_main\")',
-        '-m', str(INSTR_MAX),
-        '-r', out_dir
-    ]
+BOLD = '\033[1m'
+PREFIX = '\033['
+SUFFIX = '\033[0m'
 
-def run(test: str, out_dir: str):
+TIME_LIMIT=60
+INST_LIMIT=10
+
+def progress(msg, curr, total, prev=0):
+    status = round((curr / total) * 100)
+    color = MAPPING.get('cyan')
+    prog_str = f'{BOLD}{PREFIX}{color}m{status:3}%{SUFFIX}'
+    sys.stdout.write('\r' + (' ' * prev) + '\r')
+    sys.stdout.write(f'[{prog_str}] {msg}')
+    sys.stdout.flush()
+    return len(msg) + 7
+
+def warning(msg, prefix=None):
+    if prefix:
+        sys.stdout.write(prefix)
+    color = MAPPING.get('purple')
+    warn_str = f'{BOLD}{PREFIX}{color}mWARN{SUFFIX}'
+    sys.stdout.write(f'[{warn_str}] {msg}\n')
+    sys.stdout.flush()
+
+def info(msg, prefix=None):
+    if prefix:
+        sys.stdout.write(prefix)
+    color = MAPPING.get('green')
+    warn_str = f'{BOLD}{PREFIX}{color}mINFO{SUFFIX}'
+    sys.stdout.write(f'[{warn_str}] {msg}\n')
+    sys.stdout.flush()
+
+def indent(msg, prefix=None):
+    if prefix:
+        sys.stdout.write(prefix)
+    color = MAPPING.get('white')
+    ident_str = f'{BOLD}{PREFIX}{color}m....{SUFFIX}'
+    sys.stdout.write(f'[{ident_str}] {msg}\n')
+    sys.stdout.flush()
+
+def execute(test: str, output_dir: str):
+
+    def _cmd(test, output_dir, instr_limit):
+        return [
+            'wasp', test,
+            '-u',
+            '-e', '(invoke \"__original_main\")',
+            '-m', str(instr_limit),
+            '-r', output_dir
+        ]
+
     try:
-        out = subprocess.check_output(cmd(test, out_dir), timeout=TIMEOUT, \
-                stderr=subprocess.STDOUT)
-    except (subprocess.CalledProcessError, \
-            subprocess.TimeoutExpired) as e:
+        result = subprocess.run(
+            _cmd(test, output_dir, INST_LIMIT * 1000 * 1000),
+            timeout=TIME_LIMIT,
+            capture_output=True,
+            check=True
+        )
+    except subprocess.CalledProcessError as e:
+        warning(f'\'{test}\': crashed', prefix='\n')
         return None
-    return out
+    except subprocess.TimeoutExpired as e:
+        warning(f'\'{test}: timeout', prefix='\n')
+        return None
 
-def main(argv):
-    logging.basicConfig(
-        format='%(asctime)s: %(message)s', 
-        level=logging.INFO,
-        datefmt='%H:%M:%S'
-    )
+    return result.stdout
 
-    dirs = glob.glob('_build/for-wasp/normal/*')
-    if argv != []:
-        dirs = argv
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
 
-    table = [['category', 'ni', 'avg-paths', 'Twasp', 'Tloop', 'Tsolver']]
-    errors = []
-    for dir in dirs:
-        sum_paths = 0
-        sum_twasp = 0.0
-        sum_tloop = 0.0
-        sum_tsolv = 0.0
+    dirs = argv
+    if dirs == []:
+        dirs = glob.glob('_build/for-wasp/normal/*')
 
+    info(f'Starting Collections-C benchmarks...')
+    results, errors = [], []
+    for i, dir in enumerate(dirs):
+        prev = 0
+        sum_paths, sum_twasp, sum_tloop, sum_tsolv = 0, 0.0, 0.0, 0.0
+        info(f'Running tests in \'{dir}\'...', prefix='\n' if i > 0 else '')
         tests = glob.glob(os.path.join(dir, '*.wat'))
-        for test in tests:
-            out_dir = os.path.join('output', os.path.basename(test))
+        for i, test in enumerate(tests):
+            prev = progress(f'Running \'{test}\'...', i+1, len(tests), prev=prev)
+            output_dir = os.path.join('output', os.path.basename(test))
+
             tstart = time.time()
-            out = run(test, out_dir)
+            execute(test, output_dir)
             tdelta = time.time() - tstart
 
-            report_file = os.path.join(out_dir, 'report.json')
+            report_file = os.path.join(output_dir, 'report.json')
             if not os.path.exists(report_file):
+                warning(f'File not found \'{report_file}\'!', prefix='\n')
                 errors.append(test)
-                logging.info(f'No generated for available for \'{test}\'.')
                 continue
-            
-            with open(report_file, 'r') as f:
-                try:
-                    report = json.load(f)
-                except json.decoder.JSONDecodeError:
-                    logging.info(f'Unable to parse \'{report_file}\'.')
-                    continue
 
-            # A test specification was violated
+            with open(report_file, 'r') as f:
+                report = json.load(f)
+
             if not report['specification']:
                 errors.append(test)
 
-            sum_paths += report['paths_explored']
             sum_twasp += tdelta
+            sum_paths += report['paths_explored']
             sum_tloop += float(report['loop_time'])
             sum_tsolv += float(report['solver_time'])
 
-            logging.info(
-                f'Test {os.path.basename(test)} ' \
-                f'({report["specification"]}, ' \
-                f'twasp={round(tdelta, 2)}, tloop={float(report["loop_time"])} ' \
-                f'tsolver={float(report["solver_time"])} ' \
-                f'icnt={report["instruction_counter"]})'
-            )
-        table.append([
-            os.path.basename(test),
+        results.append([
+            os.path.basename(dir),
             len(tests),
-            int(sum_paths/len(tests)),
+            round(int(sum_paths) / len(tests)),
             round(sum_twasp, 3),
             round(sum_tloop, 3),
             round(sum_tsolv, 3)
         ])
-    
-    logging.info('Writing results to \'table.csv\'.')
-    with open('table.csv', 'w', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerows(table)
 
-    logging.info('Failed tests: ' + str(errors))
+    warning('Failed tests:', prefix='\n')
+    for i, test in enumerate(errors):
+        indent(f'{i+1}. \'{test}\'')
+
+    info('Finished. Writing results to \'results.csv\'...')
+    with open('results.csv', 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['category', 'ni', 'avg-paths', 'Twasp', 'Tloop', 'Tsolver'])
+        writer.writerows(results)
+
+    return 0
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    sys.exit(main())
