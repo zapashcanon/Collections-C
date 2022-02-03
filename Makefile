@@ -39,7 +39,7 @@ tests   := $(wildcard $(NORM_DIR)/**/*.c)
 testsbc := $(addprefix $(BUILD_DIR)/,$(tests:.c=.bc))
 testso  := $(addprefix $(BUILD_DIR)/,$(tests:.c=.o))
 
-testbugs   := $(wildcard $(BUGS_DIR)/*.c)
+testbugs   := $(wildcard $(BUGS_DIR)/**/*.c)
 testbugsbc := $(addprefix $(BUILD_DIR)/,$(testbugs:.c=.bc))
 testbugso  := $(addprefix $(BUILD_DIR)/,$(testbugs:.c=.o))
 

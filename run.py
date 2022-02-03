@@ -5,6 +5,7 @@ import csv
 import time
 import glob
 import json
+import argparse
 import subprocess
 
 # Globals
@@ -59,7 +60,7 @@ def indent(msg, prefix=None):
     sys.stdout.write(f'[{ident_str}] {msg}\n')
     sys.stdout.flush()
 
-def execute(test: str, output_dir: str):
+def execute_wasp(test: str, output_dir: str):
 
     def _cmd(test, output_dir, instr_limit):
         return [
@@ -86,15 +87,33 @@ def execute(test: str, output_dir: str):
 
     return result.stdout
 
-def main(argv=None):
-    if argv is None:
-        argv = sys.argv[1:]
 
-    dirs = argv
-    if dirs == []:
-        dirs = glob.glob('_build/for-wasp/normal/*')
+def run_test(test):
+    output_dir = os.path.join('output', os.path.basename(test))
 
-    info(f'Starting Collections-C benchmarks...')
+    tstart = time.time()
+    execute_wasp(test, output_dir)
+    tdelta = time.time() - tstart
+
+    report_file = os.path.join(output_dir, 'report.json')
+    if not os.path.exists(report_file):
+        warning(f'File not found \'{report_file}\'!', prefix='\n')
+        return []
+
+
+    with open(report_file, 'r') as f:
+        report = json.load(f)
+
+    return {
+        'twasp' : tdelta,
+        'paths' : report['paths_explored'],
+        'tloop' : report['loop_time'],
+        'tsolv' : report['solver_time'],
+        'specification': report['specification'],
+    }
+
+
+def run_tests(dirs, output_file='results.csv'):
     results, errors = [], []
     for i, dir in enumerate(dirs):
         prev = 0
@@ -103,28 +122,18 @@ def main(argv=None):
         tests = glob.glob(os.path.join(dir, '*.wat'))
         for i, test in enumerate(tests):
             prev = progress(f'Running \'{test}\'...', i+1, len(tests), prev=prev)
-            output_dir = os.path.join('output', os.path.basename(test))
 
-            tstart = time.time()
-            execute(test, output_dir)
-            tdelta = time.time() - tstart
-
-            report_file = os.path.join(output_dir, 'report.json')
-            if not os.path.exists(report_file):
-                warning(f'File not found \'{report_file}\'!', prefix='\n')
-                errors.append(test)
+            result = run_test(test)
+            if result == []:
                 continue
 
-            with open(report_file, 'r') as f:
-                report = json.load(f)
-
-            if not report['specification']:
+            if not result['specification']:
                 errors.append(test)
 
-            sum_twasp += tdelta
-            sum_paths += report['paths_explored']
-            sum_tloop += float(report['loop_time'])
-            sum_tsolv += float(report['solver_time'])
+            sum_twasp += result['twasp']
+            sum_paths += result['paths']
+            sum_tloop += float(result['tloop'])
+            sum_tsolv += float(result['tsolv'])
 
         results.append([
             os.path.basename(dir),
@@ -135,15 +144,85 @@ def main(argv=None):
             round(sum_tsolv, 3)
         ])
 
-    warning('Failed tests:', prefix='\n')
-    for i, test in enumerate(errors):
-        indent(f'{i+1}. \'{test}\'')
+    if errors:
+        warning('Failed tests:', prefix='\n')
+        for i, test in enumerate(errors):
+            indent(f'{i+1}. \'{test}\'')
 
-    info('Finished. Writing results to \'results.csv\'...')
-    with open('results.csv', 'w', newline='') as f:
+    info(f'Finished. Writing results to \'{output_file}\'...', 
+         prefix='' if errors else '\n')
+    with open(output_file, 'w', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(['category', 'ni', 'avg-paths', 'Twasp', 'Tloop', 'Tsolver'])
         writer.writerows(results)
+
+
+def get_parser():
+    parser = argparse.ArgumentParser(
+        prog='./run.py',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+
+    parser.add_argument(
+        '--normal',
+        '-N',
+        dest='normal',
+        action='store_true',
+        default=False,
+        help='run normal test for Collections-C'
+    )
+
+    parser.add_argument(
+        '--bugs',
+        '-B',
+        dest='bugs',
+        action='store_true',
+        default=False,
+        help='run test that trigger bugs in Collections-C'
+    )
+
+    parser.add_argument(
+        '--all',
+        dest='all',
+        action='store_true',
+        default=False,
+        help='run all tests'
+    )
+
+    parser.add_argument(
+        '--single',
+        dest='target',
+        action='store',
+        default=None,
+        help='run tests in the pointed directory'
+    )
+
+    return parser
+
+def parse(argv):
+    parser = get_parser()
+    return parser.parse_args(argv)
+
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+    args = parse(argv)
+
+    if not args.target is None:
+        base_dir = os.path.basename(args.target)
+        output_file = f'results_{base_dir}.csv'
+        info(f'Starting \'{base_dir}\' Collections-C benchmarks...')
+        run_tests([args.target], output_file=output_file)
+        
+    if args.normal or args.all:
+        info('Starting \'normal\' Collections-C benchmarks...')
+        run_tests(glob.glob('_build/for-wasp/normal/*'), 
+                  output_file='results_normal.csv')
+
+    if args.bugs or args.all:
+        info('Sarting \'bugs\' Collections-C benchmarks...')
+        run_tests(glob.glob('_build/for-wasp/bugs/*'),
+                  output_file='results_bugs.csv')
 
     return 0
 
