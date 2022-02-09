@@ -31,7 +31,9 @@ def progress(msg, curr, total, prev=0):
     status = round((curr / total) * 100)
     color = MAPPING.get('cyan')
     prog_str = f'{BOLD}{PREFIX}{color}m{status:3}%{SUFFIX}'
-    sys.stdout.write('\r' + (' ' * prev) + '\r')
+    sys.stdout.write('\r')
+    sys.stdout.write(' ' * prev)
+    sys.stdout.write('\r')
     sys.stdout.write(f'[{prog_str}] {msg}')
     sys.stdout.flush()
     return len(msg) + 7
