@@ -22,21 +22,18 @@ def sub_patterns(line):
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
-    
-    test = argv[0]
-    print(f'Transforming {test}...')
 
+    test = argv[0]
     if not os.path.exists(test):
         return -1
 
+    print(f'Transforming {test}...')
     with open(test, 'r') as f:
-        text = f.read()
+        lines = f.read().splitlines()
 
-    lines = text.splitlines()
-    n_lines = '\n'.join([sub_patterns(line) for line in lines])
-    
+    text = '\n'.join(map(sub_patterns, lines))
     with open(test, 'w') as f:
-        f.write(n_lines)
+        f.write(text)
 
     return 0
 
