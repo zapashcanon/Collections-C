@@ -70,7 +70,8 @@ def execute_wasp(test: str, output_dir: str):
             '-u',
             '-e', '(invoke \"__original_main\")',
             '-m', str(instr_limit),
-            '-r', output_dir
+            '--workspace', output_dir,
+            '--smt-assume'
         ]
 
     try:
@@ -91,7 +92,9 @@ def execute_wasp(test: str, output_dir: str):
 
 
 def run_test(test):
-    output_dir = os.path.join('output', os.path.basename(test))
+    output_dir = os.path.join('output',
+                              os.path.basename(os.path.dirname(test)),
+                              os.path.basename(test))
 
     tstart = time.time()
     execute_wasp(test, output_dir)
@@ -101,7 +104,6 @@ def run_test(test):
     if not os.path.exists(report_file):
         warning(f'File not found \'{report_file}\'!', prefix='\n')
         return []
-
 
     with open(report_file, 'r') as f:
         report = json.load(f)
@@ -215,7 +217,7 @@ def main(argv=None):
         output_file = f'results_{base_dir}.csv'
         info(f'Starting \'{base_dir}\' Collections-C benchmarks...')
         run_tests([args.target], output_file=output_file)
-        
+
     if args.normal or args.all:
         info('Starting \'normal\' Collections-C benchmarks...')
         run_tests(glob.glob('_build/for-wasp/normal/*'), 
