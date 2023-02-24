@@ -76,7 +76,6 @@ def execute_wasp(test, config, output_dir):
         return ([config["tool"], test, "-e", "(invoke \"__original_main\")"]
                 + config["tool_args"]
                 + ["--workspace", output_dir])
-
     try:
         result = subprocess.run(
             _cmd(test, output_dir),
@@ -123,7 +122,6 @@ def run_test(test, config):
 
 def run_tests(dirs, config, output_file="results.csv"):
     results, errors = [], []
-    print(dirs)
     for i, dir in enumerate(dirs):
         prev = 0
         sum_paths, sum_twasp, sum_tloop, sum_tsolv = 0, 0.0, 0.0, 0.0
@@ -147,7 +145,7 @@ def run_tests(dirs, config, output_file="results.csv"):
         results.append([
             os.path.basename(dir),
             len(tests),
-            round(int(sum_paths)),
+            round(sum_paths),
             round(sum_twasp, 3),
             round(sum_tloop, 3),
             round(sum_tsolv, 3)
@@ -162,8 +160,7 @@ def run_tests(dirs, config, output_file="results.csv"):
          prefix="" if errors else "\n")
     with open(output_file, "w", newline="") as f:
         writer = csv.writer(f)
-        writer.writerow(["category", "ni", "avg-paths", "Twasp", "Tloop",
-                         "Tsolver"])
+        writer.writerow(['category', 'ni', 'sum-paths', 'Twasp', 'Tloop', 'Tsolver'])
         writer.writerows(results)
 
 
