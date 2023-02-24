@@ -10,225 +10,200 @@ import subprocess
 
 # Globals
 MAPPING = {
-    'black'  : 90,
-    'red'    : 91,
-    'green'  : 92,
-    'yellow' : 93,
-    'blue'   : 94,
-    'purple' : 95,
-    'cyan'   : 96,
-    'white'  : 97
+    "black": 90,
+    "red": 91,
+    "green": 92,
+    "yellow": 93,
+    "blue": 94,
+    "purple": 95,
+    "cyan": 96,
+    "white": 97
 }
 
-BOLD = '\033[1m'
-PREFIX = '\033['
-SUFFIX = '\033[0m'
+BOLD = "\033[1m"
+PREFIX = "\033["
+SUFFIX = "\033[0m"
 
-TIME_LIMIT=60
-INST_LIMIT=10
+TIME_LIMIT = 60
+INST_LIMIT = 10
+
 
 def progress(msg, curr, total, prev=0):
     status = round((curr / total) * 100)
-    color = MAPPING.get('cyan')
-    prog_str = f'{BOLD}{PREFIX}{color}m{status:3}%{SUFFIX}'
-    sys.stdout.write('\r')
-    sys.stdout.write(' ' * prev)
-    sys.stdout.write('\r')
-    sys.stdout.write(f'[{prog_str}] {msg}')
+    color = MAPPING.get("cyan")
+    prog_str = f"{BOLD}{PREFIX}{color}m{status:3}%{SUFFIX}"
+    sys.stdout.write("\r")
+    sys.stdout.write(" " * prev)
+    sys.stdout.write("\r")
+    sys.stdout.write(f"[{prog_str}] {msg}")
     sys.stdout.flush()
     return len(msg) + 7
+
 
 def warning(msg, prefix=None):
     if prefix:
         sys.stdout.write(prefix)
-    color = MAPPING.get('purple')
-    warn_str = f'{BOLD}{PREFIX}{color}mWARN{SUFFIX}'
-    sys.stdout.write(f'[{warn_str}] {msg}\n')
+    color = MAPPING.get("purple")
+    warn_str = f"{BOLD}{PREFIX}{color}mWARN{SUFFIX}"
+    sys.stdout.write(f"[{warn_str}] {msg}\n")
     sys.stdout.flush()
+
 
 def info(msg, prefix=None):
     if prefix:
         sys.stdout.write(prefix)
-    color = MAPPING.get('green')
-    warn_str = f'{BOLD}{PREFIX}{color}mINFO{SUFFIX}'
-    sys.stdout.write(f'[{warn_str}] {msg}\n')
+    color = MAPPING.get("green")
+    warn_str = f"{BOLD}{PREFIX}{color}mINFO{SUFFIX}"
+    sys.stdout.write(f"[{warn_str}] {msg}\n")
     sys.stdout.flush()
+
 
 def indent(msg, prefix=None):
     if prefix:
         sys.stdout.write(prefix)
-    color = MAPPING.get('white')
-    ident_str = f'{BOLD}{PREFIX}{color}m....{SUFFIX}'
-    sys.stdout.write(f'[{ident_str}] {msg}\n')
+    color = MAPPING.get("white")
+    ident_str = f"{BOLD}{PREFIX}{color}m....{SUFFIX}"
+    sys.stdout.write(f"[{ident_str}] {msg}\n")
     sys.stdout.flush()
 
-def execute_wasp(test: str, output_dir: str):
+def read_json(f):
+    with open(f, "r") as fd:
+        return json.load(fd)
 
-    def _cmd(test, output_dir, instr_limit):
-        return [
-            'wasp', test,
-            '-u',
-            '-e', '(invoke \"__original_main\")',
-            '-m', str(instr_limit),
-            '--workspace', output_dir,
-            '--smt-assume'
-        ]
+def execute_wasp(test, config, output_dir):
+
+    def _cmd(test, output_dir):
+        return ([config["tool"], test, "-e", "(invoke \"__original_main\")"]
+                + config["tool_args"]
+                + ["--workspace", output_dir])
 
     try:
         result = subprocess.run(
-            _cmd(test, output_dir, INST_LIMIT * 1000 * 1000),
-            timeout=TIME_LIMIT,
+            _cmd(test, output_dir),
+            timeout=config["time_limit"],
             capture_output=True,
             check=True
         )
-    except subprocess.CalledProcessError as e:
-        warning(f'\'{test}\': crashed', prefix='\n')
+    except subprocess.CalledProcessError:
+        warning(f"\"{test}\": crashed", prefix="\n")
         return None
-    except subprocess.TimeoutExpired as e:
-        warning(f'\'{test}: timeout', prefix='\n')
+    except subprocess.TimeoutExpired:
+        warning(f"\"{test}\": timeout", prefix="\n")
         return None
 
     return result.stdout
 
 
-def run_test(test):
-    output_dir = os.path.join('output',
-                              os.path.basename(os.path.dirname(test)),
-                              os.path.basename(test))
+def run_test(test, config):
+    output_dir = os.path.join(
+        config["workspace"],
+        os.path.basename(os.path.dirname(test)),
+        os.path.basename(test)
+    )
 
     tstart = time.time()
-    execute_wasp(test, output_dir)
+    execute_wasp(test, config, output_dir)
     tdelta = time.time() - tstart
 
-    report_file = os.path.join(output_dir, 'report.json')
+    report_file = os.path.join(output_dir, "report.json")
     if not os.path.exists(report_file):
-        warning(f'File not found \'{report_file}\'!', prefix='\n')
+        warning(f"File not found \"{report_file}\"!", prefix="\n")
         return []
 
-    with open(report_file, 'r') as f:
-        report = json.load(f)
+    report = read_json(report_file)
 
     return {
-        'twasp' : tdelta,
-        'paths' : report['paths_explored'],
-        'tloop' : report['loop_time'],
-        'tsolv' : report['solver_time'],
-        'specification': report['specification'],
+        "twasp": tdelta,
+        "paths": report["paths_explored"],
+        "tloop": report["loop_time"],
+        "tsolv": report["solver_time"],
+        "specification": report["specification"],
     }
 
 
-def run_tests(dirs, output_file='results.csv'):
+def run_tests(dirs, config, output_file="results.csv"):
     results, errors = [], []
+    print(dirs)
     for i, dir in enumerate(dirs):
         prev = 0
         sum_paths, sum_twasp, sum_tloop, sum_tsolv = 0, 0.0, 0.0, 0.0
-        info(f'Running tests in \'{dir}\'...', prefix='\n' if i > 0 else '')
-        tests = glob.glob(os.path.join(dir, '*.wat'))
+        info(f"Running tests in \"{dir}\"...", prefix="\n" if i > 0 else "")
+        tests = glob.glob(os.path.join(dir, "*.wat"))
         for i, test in enumerate(tests):
-            prev = progress(f'Running \'{test}\'...', i+1, len(tests), prev=prev)
+            prev = progress(f"Running \"{test}\"...", i+1, len(tests), prev=prev)
 
-            result = run_test(test)
+            result = run_test(test, config)
             if result == []:
                 continue
 
-            if not result['specification']:
+            if not result["specification"]:
                 errors.append(test)
 
-            sum_twasp += result['twasp']
-            sum_paths += result['paths']
-            sum_tloop += float(result['tloop'])
-            sum_tsolv += float(result['tsolv'])
+            sum_twasp += result["twasp"]
+            sum_paths += result["paths"]
+            sum_tloop += float(result["tloop"])
+            sum_tsolv += float(result["tsolv"])
 
         results.append([
             os.path.basename(dir),
             len(tests),
-            round(int(sum_paths) / len(tests)),
+            round(int(sum_paths)),
             round(sum_twasp, 3),
             round(sum_tloop, 3),
             round(sum_tsolv, 3)
         ])
 
     if errors:
-        warning('Failed tests:', prefix='\n')
+        warning("Failed tests:", prefix="\n")
         for i, test in enumerate(errors):
-            indent(f'{i+1}. \'{test}\'')
+            indent(f"{i+1}. \"{test}\"")
 
-    info(f'Finished. Writing results to \'{output_file}\'...', 
-         prefix='' if errors else '\n')
-    with open(output_file, 'w', newline='') as f:
+    info(f"Finished. Writing results to \"{output_file}\"...",
+         prefix="" if errors else "\n")
+    with open(output_file, "w", newline="") as f:
         writer = csv.writer(f)
-        writer.writerow(['category', 'ni', 'avg-paths', 'Twasp', 'Tloop', 'Tsolver'])
+        writer.writerow(["category", "ni", "avg-paths", "Twasp", "Tloop",
+                         "Tsolver"])
         writer.writerows(results)
 
 
 def get_parser():
     parser = argparse.ArgumentParser(
-        prog='./run.py',
+        prog="./run.py",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
-
-    parser.add_argument(
-        '--normal',
-        '-N',
-        dest='normal',
-        action='store_true',
-        default=False,
-        help='run normal test for Collections-C'
-    )
-
-    parser.add_argument(
-        '--bugs',
-        '-B',
-        dest='bugs',
-        action='store_true',
-        default=False,
-        help='run test that trigger bugs in Collections-C'
-    )
-
-    parser.add_argument(
-        '--all',
-        dest='all',
-        action='store_true',
-        default=False,
-        help='run all tests'
-    )
-
-    parser.add_argument(
-        '--single',
-        dest='target',
-        action='store',
-        default=None,
-        help='run tests in the pointed directory'
-    )
-
+    parser.add_argument("--config", dest="config", action="store", default=None,
+                        help="path to tool configuration")
     return parser
+
 
 def parse(argv):
     parser = get_parser()
     return parser.parse_args(argv)
+
 
 def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
     args = parse(argv)
 
-    if not args.target is None:
-        base_dir = os.path.basename(args.target)
-        output_file = f'results_{base_dir}.csv'
-        info(f'Starting \'{base_dir}\' Collections-C benchmarks...')
-        run_tests([args.target], output_file=output_file)
+    if args.config is None or not os.path.exists(args.config):
+        warning(f"Please provide a valid configuration file!")
+        return 1
 
-    if args.normal or args.all:
-        info('Starting \'normal\' Collections-C benchmarks...')
-        run_tests(glob.glob('_build/for-wasp/normal/*'), 
-                  output_file='results_normal.csv')
-
-    if args.bugs or args.all:
-        info('Sarting \'bugs\' Collections-C benchmarks...')
-        run_tests(glob.glob('_build/for-wasp/bugs/*'),
-                  output_file='results_bugs.csv')
+    config = read_json(args.config)
+    for test_dir in config["test_dirs"]:
+        category = os.path.basename(test_dir)
+        config_name = os.path.splitext(os.path.basename(args.config))[0]
+        output_file = os.path.join("results", f"{config_name}_{category}.csv")
+        if not os.path.exists("results"):
+            os.makedirs("results")
+        info(f"Starting \"{category}\" Collections-C benchmarks...")
+        run_tests(glob.glob(os.path.join(test_dir, "*")), config,
+                  output_file=output_file)
 
     return 0
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     sys.exit(main())

@@ -1,6 +1,8 @@
 CC=clang
 LD=wasm-ld
 
+STACK_SIZE=1048576
+
 NLIB_DIR = lib
 BLIB_DIR = lib-with-bugs
 UTIL_DIR = for-wasp/utils
@@ -13,6 +15,8 @@ OPT ?= -O0
 # Flags
 CFLAGS += -g -m32 -emit-llvm --target=wasm32 -c
 CFLAGS += $(OPT) $(INCLUDES) $(WARN)
+
+LDFLAGS += -z stack-size=$(STACK_SIZE) --no-entry --export=__original_main 
 
 # Includes
 INCLUDES += -I$(MOCK_DIR)
@@ -65,7 +69,7 @@ $(BUILD_DIR)/for-wasp/bugs/%.bc: for-wasp/bugs/%.c
 
 $(BUILD_DIR)/for-wasp/bugs/%.wasm: $(BUILD_DIR)/for-wasp/bugs/%.o $(libbugo) $(BUILD_DIR)/for-wasp/utils/utils.o $(BUILD_DIR)/for-wasp/mockups/mockups.o
 	@echo "Building $@"
-	@$(LD) --no-entry --export=__original_main $^ -o $@
+	@$(LD) $(LDFLAGS) $^ -o $@
 
 # NORMAL
 
@@ -76,7 +80,7 @@ $(BUILD_DIR)/for-wasp/normal/%.bc: for-wasp/normal/%.c
 
 $(BUILD_DIR)/for-wasp/normal/%.wasm: $(BUILD_DIR)/for-wasp/normal/%.o $(libo) $(BUILD_DIR)/for-wasp/utils/utils.o $(BUILD_DIR)/for-wasp/mockups/mockups.o
 	@echo "Building $@"
-	@$(LD) --no-entry --export=__original_main $^ -o $@
+	@$(LD) $(LDFLAGS) $^ -o $@
 
 # GENERIC BUILD
 

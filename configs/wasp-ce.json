@@ -1,0 +1,8 @@
+{ 
+  "tool": "wasp-ce",
+  "tool_args" : ["-u", "--policy", "breadth"],
+  "workspace" : "output",
+  "test_dirs" : ["_build/for-wasp/normal", "_build/for-wasp/bugs"],
+  "time_limit" : 60,
+  "memory_limit" : 15000000
+}
