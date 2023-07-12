@@ -6,7 +6,6 @@ STACK_SIZE=1048576
 NLIB_DIR = lib
 BLIB_DIR = lib-with-bugs
 UTIL_DIR = for-wasp/utils
-MOCK_DIR = for-wasp/mockups
 NORM_DIR = for-wasp/normal
 BUGS_DIR = for-wasp/bugs
 BUILD_DIR = _build
@@ -16,10 +15,9 @@ OPT ?= -O0
 CFLAGS += -g -m32 -emit-llvm --target=wasm32 -c
 CFLAGS += $(OPT) $(INCLUDES) $(WARN)
 
-LDFLAGS += -z stack-size=$(STACK_SIZE) --no-entry --export=__original_main 
+LDFLAGS += -z stack-size=$(STACK_SIZE) --no-entry --export=__original_main
 
 # Includes
-INCLUDES += -I$(MOCK_DIR)
 INCLUDES += -I$(UTIL_DIR)
 
 # Warnings
@@ -67,7 +65,7 @@ $(BUILD_DIR)/for-wasp/bugs/%.bc: for-wasp/bugs/%.c
 	@echo "Building $@"
 	@echo "$(CC) $(CFLAGS) -I$(BLIB_DIR)/include -o $@ $<"; $(CC) $(CFLAGS) -I$(BLIB_DIR)/include -o $@ $<
 
-$(BUILD_DIR)/for-wasp/bugs/%.wasm: $(BUILD_DIR)/for-wasp/bugs/%.o $(libbugo) $(BUILD_DIR)/for-wasp/utils/utils.o $(BUILD_DIR)/for-wasp/mockups/mockups.o
+$(BUILD_DIR)/for-wasp/bugs/%.wasm: $(BUILD_DIR)/for-wasp/bugs/%.o $(libbugo) $(BUILD_DIR)/for-wasp/utils/utils.o
 	@echo "Building $@"
 	@$(LD) $(LDFLAGS) $^ -o $@
 
@@ -78,7 +76,7 @@ $(BUILD_DIR)/for-wasp/normal/%.bc: for-wasp/normal/%.c
 	@echo "Building $@"
 	@echo "$(CC) $(CFLAGS) -I$(NLIB_DIR)/include -o $@ $<"; $(CC) $(CFLAGS) -I$(NLIB_DIR)/include -o $@ $<
 
-$(BUILD_DIR)/for-wasp/normal/%.wasm: $(BUILD_DIR)/for-wasp/normal/%.o $(libo) $(BUILD_DIR)/for-wasp/utils/utils.o $(BUILD_DIR)/for-wasp/mockups/mockups.o
+$(BUILD_DIR)/for-wasp/normal/%.wasm: $(BUILD_DIR)/for-wasp/normal/%.o $(libo) $(BUILD_DIR)/for-wasp/utils/utils.o
 	@echo "Building $@"
 	@$(LD) $(LDFLAGS) $^ -o $@
 
@@ -97,7 +95,6 @@ $(BUILD_DIR)/%.o: $(BUILD_DIR)/%.bc
 $(BUILD_DIR)/%.wat: $(BUILD_DIR)/%.wasm
 	@echo "Building $@"
 	@wasm2wat $^ -o $@
-	@./scripts/patch_wat.py $@
 
 # OTHER
 
@@ -107,16 +104,6 @@ $(BUILD_DIR)/for-wasp/utils/utils.bc: $(UTIL_DIR)/utils.c
 	@echo "$(CC) $(CFLAGS) -o $@ $^"; $(CC) $(CFLAGS) -o $@ $^
 
 $(BUILD_DIR)/for-wasp/utils/utils.o: $(BUILD_DIR)/for-wasp/utils/utils.bc
-	@echo "Building $@"
-	@opt -O1 $< -o $<
-	@llc -O1 -march=wasm32 -filetype=obj $< -o $@
-
-$(BUILD_DIR)/for-wasp/mockups/mockups.bc: $(MOCK_DIR)/mockups.c
-	@mkdir -p $(dir $@)
-	@echo "Building $@"
-	@echo "$(CC) $(CFLAGS) -o $@ $^"; $(CC) $(CFLAGS) -o $@ $^
-
-$(BUILD_DIR)/for-wasp/mockups/mockups.o: $(BUILD_DIR)/for-wasp/mockups/mockups.bc
 	@echo "Building $@"
 	@opt -O1 $< -o $<
 	@llc -O1 -march=wasm32 -filetype=obj $< -o $@
