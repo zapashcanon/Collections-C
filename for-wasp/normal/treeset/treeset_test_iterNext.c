@@ -1,16 +1,17 @@
 #include "treeset.h"
 #include "utils.h"
-#include "mockups.h"
+
+
 
 static TreeSet *set;
 
 int main() {
     treeset_new(cmp, &set);
 
-    int a = sym_int("a");
-    int b = sym_int("b");
-    int c = sym_int("c");
-    int d = sym_int("d");
+    int a = symbol();
+    int b = symbol();
+    int c = symbol();
+    int d = symbol();
     assume(a < b && b < c && c < d);
 
     treeset_add(set, &a);

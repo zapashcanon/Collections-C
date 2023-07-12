@@ -1,5 +1,6 @@
 #include "stack.h"
-#include "mockups.h"
+
+
 
 static Stack *s;
 
@@ -10,9 +11,9 @@ void teardown_tests() { stack_destroy(s); }
 int main() {
     setup_tests();
 
-    int a = sym_int("a");
-    int b = sym_int("b");
-    int c = sym_int("c");
+    int a = symbol();
+    int b = symbol();
+    int c = symbol();
 
     stack_push(s, (void *)&a);
     stack_push(s, (void *)&b);

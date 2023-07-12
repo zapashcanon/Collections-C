@@ -1,5 +1,6 @@
 #include "array.h"
-#include "mockups.h"
+
+
 
 void reduce_add(void *e1, void *e2, void *result) {
     int el1 = e1 ? *((int *)e1) : 0;
@@ -15,11 +16,11 @@ static int stat;
 int main() {
     stat = array_new(&v1);
 
-    int a = sym_int("a");
-    int b = sym_int("b");
-    int c = sym_int("c");
-    int d = sym_int("d");
-    int e = sym_int("e");
+    int a = symbol();
+    int b = symbol();
+    int c = symbol();
+    int d = symbol();
+    int e = symbol();
     int result;
 
     array_add(v1, &a);

@@ -21,7 +21,12 @@
 #ifndef COLLECTIONS_C_COMMON_H
 #define COLLECTIONS_C_COMMON_H
 
-#include "mockups.h"
+ __attribute__((import_module("symbolic"), import_name("i32.symbolic"))) int symbol();
+ __attribute__((import_module("symbolic"), import_name("assume"))) void assume(int);
+ __attribute__((import_module("symbolic"), import_name("assert"))) void assert(int);
+
+ __attribute__((import_module("summaries"), import_name("alloc"))) unsigned int alloc(unsigned int, unsigned int);
+ __attribute__((import_module("summaries"), import_name("dealloc"))) void dealloc(void*);
 
 #ifdef ARCH_64
 #define MAX_POW_TWO (((size_t) 1) << 63)

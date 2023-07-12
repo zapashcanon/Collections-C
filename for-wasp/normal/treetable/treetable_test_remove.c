@@ -1,26 +1,27 @@
 #include "treetable.h"
 #include "utils.h"
-#include "mockups.h"
+
+
 
 static TreeTable *table;
 
 int main() {
     treetable_new(cmp, &table);
 
-    int x = sym_int("x");
-    int y = sym_int("y");
-    int z = sym_int("z");
-    int w = sym_int("w");
+    int x = symbol();
+    int y = symbol();
+    int z = symbol();
+    int w = symbol();
 
-    int a = sym_int("a");
+    int a = symbol();
 
     char str_a[] = {a, '\0'};
 
-    int b = sym_int("b");
+    int b = symbol();
 
     char str_b[] = {b, '\0'};
 
-    int c = sym_int("c");
+    int c = symbol();
 
     char str_c[] = {c, '\0'};
 

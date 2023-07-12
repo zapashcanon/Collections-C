@@ -1,5 +1,6 @@
 #include "queue.h"
-#include "mockups.h"
+
+
 
 static Queue *q;
 static Queue *q2;
@@ -18,9 +19,9 @@ void teardown_test() {
 int main() {
     setup_test();
 
-    int a = sym_int("a");
-    int b = sym_int("b");
-    int c = sym_int("c");
+    int a = symbol();
+    int b = symbol();
+    int c = symbol();
 
     queue_enqueue(q, &a);
     queue_enqueue(q, &b);

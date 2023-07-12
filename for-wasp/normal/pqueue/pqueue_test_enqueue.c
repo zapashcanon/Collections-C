@@ -1,5 +1,6 @@
 #include "pqueue.h"
-#include "mockups.h"
+
+
 
 static struct Pair { int a, b; } A, B, C;
 
@@ -33,13 +34,13 @@ void teardown_tests() {
 int main() {
     setup_tests();
 
-    int a = sym_int("a");
-    int b = sym_int("b");
-    int c = sym_int("c");
-    int d = sym_int("d");
+    int a = symbol();
+    int b = symbol();
+    int c = symbol();
+    int d = symbol();
 
-    int e = sym_int("e");
-    int f = sym_int("f");
+    int e = symbol();
+    int f = symbol();
     int *ptr;
  
     assume(e < 8388608 && e > -8388608);

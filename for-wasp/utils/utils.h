@@ -1,14 +1,13 @@
 #ifndef TEST_UTILS_H
 #define TEST_UTILS_H
 
-#include "mockups.h"
+ __attribute__((import_module("symbolic"), import_name("i32.symbolic"))) int symbol();
+ __attribute__((import_module("symbolic"), import_name("assume"))) void assume(int);
+ __attribute__((import_module("symbolic"), import_name("assert"))) void assert(int);
 
-#define symb_str(X)                                                            \
-    int X = sym_int("X");                      \
+#define symb_str(X)                          \
+    int X = symbol();                      \
     char str_##X[] = {X, '\0'}
-
-#define symb_uint(X)                                                           \
-    uint64_t X = sym_int("X");
 
 void CHECK_EQUAL_C_STRING(char *s1, char *s2);
 

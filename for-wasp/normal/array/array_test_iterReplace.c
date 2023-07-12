@@ -1,5 +1,6 @@
 #include "array.h"
-#include "mockups.h"
+
+
 
 static Array *v1;
 static Array *v2;
@@ -9,12 +10,12 @@ static int stat;
 int main() {
     stat = array_new(&v1);
 
-    int a = sym_int("a");
-    int b = sym_int("b");
-    int c = sym_int("c");
-    int d = sym_int("d");
+    int a = symbol();
+    int b = symbol();
+    int c = symbol();
+    int d = symbol();
 
-    int replacement = sym_int("replacement");
+    int replacement = symbol();
 
     assume(c != a && c != b && c != d && c != replacement);
 

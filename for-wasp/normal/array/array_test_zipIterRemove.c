@@ -1,6 +1,7 @@
 #include "array.h"
 #include "utils.h"
-#include "mockups.h"
+
+
 
 static Array *v1;
 static Array *v2;
@@ -10,31 +11,31 @@ static int stat;
 int main() {
     stat = array_new(&v1);
 
-    int a = sym_int("a");
+    int a = symbol();
 
     char str_a[] = {a, '\0'};
 
-    int b = sym_int("b");
+    int b = symbol();
 
     char str_b[] = {b, '\0'};
 
-    int c = sym_int("c");
+    int c = symbol();
 
     char str_c[] = {c, '\0'};
 
-    int d = sym_int("d");
+    int d = symbol();
 
     char str_d[] = {d, '\0'};
 
-    int e = sym_int("e");
+    int e = symbol();
 
     char str_e[] = {e, '\0'};
 
-    int f = sym_int("f");
+    int f = symbol();
 
     char str_f[] = {f, '\0'};
 
-    int g = sym_int("g");
+    int g = symbol();
 
     char str_g[] = {g, '\0'};
 

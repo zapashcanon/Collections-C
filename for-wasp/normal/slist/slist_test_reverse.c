@@ -1,5 +1,6 @@
 #include "slist.h"
-#include "mockups.h"
+
+
 
 static SList *list;
 static SList *list2;
@@ -17,12 +18,12 @@ void teardown_test() {
 
 int main() {
     setup_test();
-    int a = sym_int("a");
-    int b = sym_int("b");
-    int c = sym_int("c");
-    int d = sym_int("d");
-    int e = sym_int("e");
-    int f = sym_int("f");
+    int a = symbol();
+    int b = symbol();
+    int c = symbol();
+    int d = symbol();
+    int e = symbol();
+    int f = symbol();
     slist_add(list, &a);
     slist_add(list, &b);
     slist_add(list, &c);

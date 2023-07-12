@@ -1,5 +1,6 @@
 #include "deque.h"
-#include "mockups.h"
+
+
 
 static Deque *deque;
 static DequeConf conf;
@@ -12,12 +13,12 @@ void teardown_tests() { deque_destroy(deque); }
 int main() {
     setup_tests();
 
-    int a = sym_int("a");
-    int b = sym_int("b");
-    int c = sym_int("c");
-    int d = sym_int("d");
-    int e = sym_int("e");
-    int f = sym_int("f");
+    int a = symbol();
+    int b = symbol();
+    int c = symbol();
+    int d = symbol();
+    int e = symbol();
+    int f = symbol();
 
     deque_add(deque, &a);
     deque_add(deque, &b);

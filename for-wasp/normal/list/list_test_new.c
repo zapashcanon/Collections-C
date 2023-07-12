@@ -1,5 +1,6 @@
 #include "list.h"
-#include "mockups.h"
+
+
 
 static List *list1;
 static List *list2;

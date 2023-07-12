@@ -1,5 +1,6 @@
 #include "list.h"
-#include "mockups.h"
+
+
 
 static List *list1;
 static List *list2;
@@ -14,11 +15,11 @@ void teardown_test() {
 int main() {
     setup_tests();
 
-    int a = sym_int("a");
-    int b = sym_int("b");
-    int c = sym_int("c");
-    int d = sym_int("d");
-    int p = sym_int("p");
+    int a = symbol();
+    int b = symbol();
+    int c = symbol();
+    int d = symbol();
+    int p = symbol();
 
     list_add(list1, &a);
     list_add(list1, &b);

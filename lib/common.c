@@ -21,7 +21,6 @@
 
 #include "common.h"
 
-
 /**
  * String comparator function.
  *

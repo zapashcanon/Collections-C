@@ -1,5 +1,6 @@
 #include "slist.h"
-#include "mockups.h"
+
+
 
 static SList *list;
 static SList *list2;
@@ -10,14 +11,14 @@ int a, b, c, d, e, f, g, h;
 void setup_test() {
     slist_new(&list), slist_new(&list2);
 
-    a = sym_int("a");
-    b = sym_int("b");
-    c = sym_int("c");
-    d = sym_int("d");
-    e = sym_int("e");
-    f = sym_int("f");
-    g = sym_int("g");
-    h = sym_int("h");
+    a = symbol();
+    b = symbol();
+    c = symbol();
+    d = symbol();
+    e = symbol();
+    f = symbol();
+    g = symbol();
+    h = symbol();
 
     int *va = (int *)malloc(sizeof(int));
     int *vb = (int *)malloc(sizeof(int));
@@ -58,7 +59,7 @@ void teardown_test() {
 int main() {
     setup_test();
 
-    int i = sym_int("i");
+    int i = symbol();
     int *i1 = (int *)malloc(sizeof(int));
 
     *i1 = i;
@@ -84,7 +85,7 @@ int main() {
     slist_get_at(list, 4, (void *)&li4);
     assert(d == *li4);
 
-    int x = sym_int("x");
+    int x = symbol();
     int *i2 = (int *)malloc(sizeof(int));
 
     *i2 = x;

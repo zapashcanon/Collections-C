@@ -1,5 +1,6 @@
 #include "deque.h"
-#include "mockups.h"
+
+
 
 static Deque *deque;
 static DequeConf conf;
@@ -22,9 +23,9 @@ int main() {
 
     assert(2 == deque_capacity(deque));
 
-    int a = sym_int("a");
-    int b = sym_int("b");
-    int c = sym_int("c");
+    int a = symbol();
+    int b = symbol();
+    int c = symbol();
 
     deque_add(deque, &a);
     deque_add(deque, &b);
