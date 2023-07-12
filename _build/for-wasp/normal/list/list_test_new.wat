@@ -4,6 +4,9 @@
   (type (;2;) (func))
   (type (;3;) (func (result i32)))
   (type (;4;) (func (param i32) (result i32)))
+  (import "symbolic" "assert" (func $assert (type 1)))
+  (import "summaries" "alloc" (func $alloc (type 0)))
+  (import "summaries" "dealloc" (func $dealloc (type 1)))
   (func $setup_tests (type 2)
     i32.const 1028
     call $list_new
@@ -20,11 +23,11 @@
     call $list_destroy)
   (func $__original_main (type 3) (result i32)
     (local i32)
-    global.get 0
+    global.get $__stack_pointer
     i32.const 16
     i32.sub
     local.tee 0
-    global.set 0
+    global.set $__stack_pointer
     call $setup_tests
     i32.const 0
     i32.load offset=1028
@@ -32,14 +35,14 @@
     i32.ne
     i32.const 1
     i32.and
-    sym_assert
+    call $assert
     i32.const 0
     i32.load offset=1032
     i32.const 0
     i32.ne
     i32.const 1
     i32.and
-    sym_assert
+    call $assert
     local.get 0
     i32.const 0
     i32.store offset=12
@@ -56,7 +59,7 @@
     i32.eq
     i32.const 1
     i32.and
-    sym_assert
+    call $assert
     i32.const 0
     i32.load offset=1028
     local.get 0
@@ -70,7 +73,7 @@
     i32.eq
     i32.const 1
     i32.and
-    sym_assert
+    call $assert
     i32.const 0
     i32.const 0
     i32.load offset=1028
@@ -78,7 +81,7 @@
     i32.eq
     i32.const 1
     i32.and
-    sym_assert
+    call $assert
     i32.const 0
     i32.load offset=1028
     i32.const 0
@@ -86,20 +89,20 @@
     i32.ne
     i32.const 1
     i32.and
-    sym_assert
+    call $assert
     call $teardown_test
     local.get 0
     i32.const 16
     i32.add
-    global.set 0
+    global.set $__stack_pointer
     i32.const 0)
   (func $malloc (type 4) (param i32) (result i32)
     (local i32)
-    global.get 0
+    global.get $__stack_pointer
     i32.const 16
     i32.sub
     local.tee 1
-    global.set 0
+    global.set $__stack_pointer
     local.get 1
     local.get 0
     i32.store offset=12
@@ -148,20 +151,20 @@
     i32.load offset=8
     local.get 1
     i32.load offset=12
-    alloc
+    call $alloc
     local.set 0
     local.get 1
     i32.const 16
     i32.add
-    global.set 0
+    global.set $__stack_pointer
     local.get 0)
   (func $calloc (type 0) (param i32 i32) (result i32)
     (local i32)
-    global.get 0
+    global.get $__stack_pointer
     i32.const 16
     i32.sub
     local.tee 2
-    global.set 0
+    global.set $__stack_pointer
     local.get 2
     local.get 0
     i32.store offset=12
@@ -222,33 +225,33 @@
     local.get 2
     i32.load offset=8
     i32.mul
-    alloc
-    local.set 1
+    call $alloc
+    local.set 0
     local.get 2
     i32.const 16
     i32.add
-    global.set 0
-    local.get 1)
+    global.set $__stack_pointer
+    local.get 0)
   (func $free (type 1) (param i32)
     (local i32)
-    global.get 0
+    global.get $__stack_pointer
     i32.const 16
     i32.sub
     local.tee 1
-    global.set 0
+    global.set $__stack_pointer
     local.get 1
     local.get 0
     i32.store offset=12
     local.get 1
     i32.load offset=12
-    free
+    call $dealloc
     local.get 1
     i32.const 16
     i32.add
-    global.set 0)
+    global.set $__stack_pointer)
   (func $list_conf_init (type 1) (param i32)
     (local i32)
-    global.get 0
+    global.get $__stack_pointer
     i32.const 16
     i32.sub
     local.tee 1
@@ -268,11 +271,11 @@
     i32.store offset=8)
   (func $list_new (type 4) (param i32) (result i32)
     (local i32)
-    global.get 0
+    global.get $__stack_pointer
     i32.const 16
     i32.sub
     local.tee 1
-    global.set 0
+    global.set $__stack_pointer
     local.get 1
     local.get 0
     i32.store offset=12
@@ -286,15 +289,15 @@
     local.get 1
     i32.const 16
     i32.add
-    global.set 0
+    global.set $__stack_pointer
     local.get 0)
   (func $list_new_conf (type 0) (param i32 i32) (result i32)
     (local i32)
-    global.get 0
+    global.get $__stack_pointer
     i32.const 16
     i32.sub
     local.tee 2
-    global.set 0
+    global.set $__stack_pointer
     local.get 2
     local.get 0
     i32.store offset=8
@@ -352,19 +355,19 @@
     end
     local.get 2
     i32.load offset=12
-    local.set 1
+    local.set 0
     local.get 2
     i32.const 16
     i32.add
-    global.set 0
-    local.get 1)
+    global.set $__stack_pointer
+    local.get 0)
   (func $list_destroy (type 1) (param i32)
     (local i32)
-    global.get 0
+    global.get $__stack_pointer
     i32.const 16
     i32.sub
     local.tee 1
-    global.set 0
+    global.set $__stack_pointer
     local.get 1
     local.get 0
     i32.store offset=12
@@ -392,14 +395,14 @@
     local.get 1
     i32.const 16
     i32.add
-    global.set 0)
+    global.set $__stack_pointer)
   (func $list_remove_all (type 4) (param i32) (result i32)
     (local i32)
-    global.get 0
+    global.get $__stack_pointer
     i32.const 16
     i32.sub
     local.tee 1
-    global.set 0
+    global.set $__stack_pointer
     local.get 1
     local.get 0
     i32.store offset=8
@@ -438,15 +441,15 @@
     local.get 1
     i32.const 16
     i32.add
-    global.set 0
+    global.set $__stack_pointer
     local.get 0)
   (func $unlinkn_all (type 0) (param i32 i32) (result i32)
     (local i32)
-    global.get 0
+    global.get $__stack_pointer
     i32.const 32
     i32.sub
     local.tee 2
-    global.set 0
+    global.set $__stack_pointer
     local.get 2
     local.get 0
     i32.store offset=24
@@ -519,19 +522,19 @@
     end
     local.get 2
     i32.load offset=28
-    local.set 1
+    local.set 0
     local.get 2
     i32.const 32
     i32.add
-    global.set 0
-    local.get 1)
+    global.set $__stack_pointer
+    local.get 0)
   (func $unlinkn (type 0) (param i32 i32) (result i32)
     (local i32)
-    global.get 0
+    global.get $__stack_pointer
     i32.const 16
     i32.sub
     local.tee 2
-    global.set 0
+    global.set $__stack_pointer
     local.get 2
     local.get 0
     i32.store offset=12
@@ -621,23 +624,23 @@
     call_indirect (type 1)
     local.get 2
     i32.load offset=12
-    local.tee 1
-    local.get 1
+    local.tee 0
+    local.get 0
     i32.load
     i32.const -1
     i32.add
     i32.store
     local.get 2
     i32.load offset=4
-    local.set 1
+    local.set 0
     local.get 2
     i32.const 16
     i32.add
-    global.set 0
-    local.get 1)
+    global.set $__stack_pointer
+    local.get 0)
   (func $list_get_first (type 0) (param i32 i32) (result i32)
     (local i32)
-    global.get 0
+    global.get $__stack_pointer
     i32.const 16
     i32.sub
     local.tee 2
@@ -672,7 +675,7 @@
     i32.load offset=12)
   (func $list_get_last (type 0) (param i32 i32) (result i32)
     (local i32)
-    global.get 0
+    global.get $__stack_pointer
     i32.const 16
     i32.sub
     local.tee 2
@@ -707,7 +710,7 @@
     i32.load offset=12)
   (func $list_size (type 4) (param i32) (result i32)
     (local i32)
-    global.get 0
+    global.get $__stack_pointer
     i32.const 16
     i32.sub
     local.tee 1
@@ -716,35 +719,10 @@
     local.get 1
     i32.load offset=12
     i32.load)
-  (func $assert (type 1) (param i32)
-    global.get 0
-    i32.const 16
-    i32.sub
-    local.get 0
-    i32.store offset=12)
-  (func $alloc (type 0) (param i32 i32) (result i32)
-    (local i32)
-    global.get 0
-    i32.const 16
-    i32.sub
-    local.tee 2
-    local.get 0
-    i32.store offset=12
-    local.get 2
-    local.get 1
-    i32.store offset=8
-    local.get 2
-    i32.load offset=12)
-  (func $dealloc (type 1) (param i32)
-    global.get 0
-    i32.const 16
-    i32.sub
-    local.get 0
-    i32.store offset=12)
   (table (;0;) 4 4 funcref)
-  (memory (;0;) 2)
-  (global (;0;) (mut i32) (i32.const 66576))
+  (memory (;0;) 17)
+  (global $__stack_pointer (mut i32) (i32.const 1049616))
   (export "memory" (memory 0))
   (export "__original_main" (func $__original_main))
-  (elem (;0;) (i32.const 1) $malloc $calloc $free)
-  (data (;0;) (i32.const 1024) "\10\04\01\00"))
+  (elem (;0;) (i32.const 1) func $malloc $calloc $free)
+  (data $.data (i32.const 1024) "\10\04\10\00"))
