@@ -3,9 +3,10 @@
   (type (;1;) (func (param i32)))
   (type (;2;) (func (param i32) (result i32)))
   (type (;3;) (func (result i32)))
-  (type (;4;) (func (param i32 i32)))
-  (type (;5;) (func (param i32 i32 i32) (result i32)))
-  (import "symbolic" "i32.symbolic" (func $symbol (type 3)))
+  (type (;4;) (func))
+  (type (;5;) (func (param i32 i32)))
+  (type (;6;) (func (param i32 i32 i32) (result i32)))
+  (import "symbolic" "i32_symbol" (func $symbol (type 3)))
   (import "symbolic" "assert" (func $assert (type 1)))
   (import "summaries" "alloc" (func $alloc (type 0)))
   (import "summaries" "dealloc" (func $dealloc (type 1)))
@@ -136,6 +137,9 @@
     i32.add
     global.set $__stack_pointer
     i32.const 0)
+  (func $_start (type 4)
+    call $__original_main
+    drop)
   (func $malloc (type 2) (param i32) (result i32)
     (local i32)
     global.get $__stack_pointer
@@ -500,7 +504,7 @@
     i32.const 16
     i32.add
     global.set $__stack_pointer)
-  (func $tree_destroy (type 4) (param i32 i32)
+  (func $tree_destroy (type 5) (param i32 i32)
     (local i32)
     global.get $__stack_pointer
     i32.const 16
@@ -719,7 +723,7 @@
     i32.add
     global.set $__stack_pointer
     local.get 0)
-  (func $treetable_add (type 5) (param i32 i32 i32) (result i32)
+  (func $treetable_add (type 6) (param i32 i32 i32) (result i32)
     (local i32)
     global.get $__stack_pointer
     i32.const 32
@@ -951,7 +955,7 @@
     i32.add
     global.set $__stack_pointer
     local.get 0)
-  (func $rebalance_after_insert (type 4) (param i32 i32)
+  (func $rebalance_after_insert (type 5) (param i32 i32)
     (local i32)
     global.get $__stack_pointer
     i32.const 16
@@ -1169,7 +1173,7 @@
     i32.const 16
     i32.add
     global.set $__stack_pointer)
-  (func $rotate_left (type 4) (param i32 i32)
+  (func $rotate_left (type 5) (param i32 i32)
     (local i32)
     global.get $__stack_pointer
     i32.const 16
@@ -1275,7 +1279,7 @@
     local.get 2
     i32.load offset=4
     i32.store offset=12)
-  (func $rotate_right (type 4) (param i32 i32)
+  (func $rotate_right (type 5) (param i32 i32)
     (local i32)
     global.get $__stack_pointer
     i32.const 16
@@ -1473,6 +1477,6 @@
   (memory (;0;) 17)
   (global $__stack_pointer (mut i32) (i32.const 1049616))
   (export "memory" (memory 0))
-  (export "__original_main" (func $__original_main))
+  (export "_start" (func $_start))
   (elem (;0;) (i32.const 1) func $cmp $malloc $calloc $free)
   (data $.data (i32.const 1024) "\10\04\10\00"))

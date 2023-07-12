@@ -5,7 +5,7 @@
   (type (;3;) (func (result i32)))
   (type (;4;) (func))
   (type (;5;) (func (param i32 i32 i32) (result i32)))
-  (import "symbolic" "i32.symbolic" (func $symbol (type 3)))
+  (import "symbolic" "i32_symbol" (func $symbol (type 3)))
   (import "symbolic" "assume" (func $assume (type 1)))
   (import "symbolic" "assert" (func $assert (type 1)))
   (import "summaries" "alloc" (func $alloc (type 0)))
@@ -260,6 +260,9 @@
     i32.add
     global.set $__stack_pointer
     i32.const 0)
+  (func $_start (type 4)
+    call $__original_main
+    drop)
   (func $malloc (type 2) (param i32) (result i32)
     (local i32)
     global.get $__stack_pointer
@@ -994,6 +997,6 @@
   (memory (;0;) 17)
   (global $__stack_pointer (mut i32) (i32.const 1049648))
   (export "memory" (memory 0))
-  (export "__original_main" (func $__original_main))
+  (export "_start" (func $_start))
   (elem (;0;) (i32.const 1) func $pred3 $malloc $calloc $free)
   (data $.data (i32.const 1024) "0\04\10\00"))

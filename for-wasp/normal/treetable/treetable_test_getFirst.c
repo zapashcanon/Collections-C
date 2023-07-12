@@ -43,3 +43,4 @@ int main() {
 
     treetable_destroy(table);
 }
+void _start() { main(); }

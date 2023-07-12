@@ -28,3 +28,4 @@ int main() {
     assert(2 == treeset_size(set));
     assert(0 == treeset_contains(set, &b));
 }
+void _start() { main(); }

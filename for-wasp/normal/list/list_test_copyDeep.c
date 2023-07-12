@@ -78,3 +78,4 @@ int main() {
 
     teardown_test();
 }
+void _start() { main(); }

@@ -77,3 +77,4 @@ int main() {
     free(rm);
     teardown_test();
 }
+void _start() { main(); }

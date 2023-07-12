@@ -19,3 +19,4 @@ int main() {
 
     assert(3 == treeset_size(set));
 }
+void _start() { main(); }

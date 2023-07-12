@@ -15,7 +15,7 @@ OPT ?= -O0
 CFLAGS += -g -m32 -emit-llvm --target=wasm32 -c
 CFLAGS += $(OPT) $(INCLUDES) $(WARN)
 
-LDFLAGS += -z stack-size=$(STACK_SIZE) --no-entry --export=__original_main
+LDFLAGS += -z stack-size=$(STACK_SIZE) --entry=_start
 
 # Includes
 INCLUDES += -I$(UTIL_DIR)

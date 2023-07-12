@@ -96,6 +96,9 @@
     i32.add
     global.set $__stack_pointer
     i32.const 0)
+  (func $_start (type 2)
+    call $__original_main
+    drop)
   (func $malloc (type 4) (param i32) (result i32)
     (local i32)
     global.get $__stack_pointer
@@ -723,6 +726,6 @@
   (memory (;0;) 17)
   (global $__stack_pointer (mut i32) (i32.const 1049616))
   (export "memory" (memory 0))
-  (export "__original_main" (func $__original_main))
+  (export "_start" (func $_start))
   (elem (;0;) (i32.const 1) func $malloc $calloc $free)
   (data $.data (i32.const 1024) "\10\04\10\00"))

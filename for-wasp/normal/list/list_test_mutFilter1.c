@@ -76,3 +76,4 @@ int main() {
     assert(e == NULL);
     teardown_test();
 }
+void _start() { main(); }

@@ -47,3 +47,4 @@ int main() {
     assert(1 == three);
     assert(1 == four);
 }
+void _start() { main(); }

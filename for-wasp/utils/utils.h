@@ -1,7 +1,7 @@
 #ifndef TEST_UTILS_H
 #define TEST_UTILS_H
 
- __attribute__((import_module("symbolic"), import_name("i32.symbolic"))) int symbol();
+ __attribute__((import_module("symbolic"), import_name("i32_symbol"))) int symbol();
  __attribute__((import_module("symbolic"), import_name("assume"))) void assume(int);
  __attribute__((import_module("symbolic"), import_name("assert"))) void assert(int);
 
