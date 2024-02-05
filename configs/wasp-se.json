@@ -1,8 +1,0 @@
-{ 
-  "tool": "wasp-se",
-  "tool_args" : ["-u", "--policy", "breadth", "--encoding", "incremental"],
-  "workspace" : "output",
-  "test_dirs" : ["_build/for-wasp/normal", "_build/for-wasp/bugs"],
-  "time_limit" : 60,
-  "memory_limit" : 15000000
-}
