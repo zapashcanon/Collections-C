@@ -21,81 +21,48 @@
 #ifndef COLLECTIONS_C_COMMON_H
 #define COLLECTIONS_C_COMMON_H
 
- __attribute__((import_module("symbolic"), import_name("i32_symbol"))) int symbol();
- __attribute__((import_module("symbolic"), import_name("assume"))) void assume(int);
- __attribute__((import_module("symbolic"), import_name("assert"))) void assert(int);
-
- __attribute__((import_module("summaries"), import_name("alloc"))) unsigned int alloc(unsigned int, unsigned int);
- __attribute__((import_module("summaries"), import_name("dealloc"))) void dealloc(void*);
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
 
 #ifdef ARCH_64
-#define MAX_POW_TWO (((size_t) 1) << 63)
+#define MAX_POW_TWO (((size_t)1) << 63)
 #else
-#define MAX_POW_TWO (((size_t) 1) << 31)
+#define MAX_POW_TWO (((size_t)1) << 31)
 #endif /* ARCH_64 */
 
-typedef char  int8_t;
-typedef short int16_t;
-typedef int   int32_t;
-typedef long  int64_t;
-
-typedef unsigned char  uint8_t;
-typedef unsigned short uint16_t;
-typedef unsigned int   uint32_t;
-typedef unsigned long  uint64_t;
-
-typedef int bool;
-typedef int uintptr_t;
-typedef unsigned long size_t;
-
-#define true  1
-#define false 0
-#define NULL  0
-
 enum cc_stat {
-    CC_OK                   = 0,
+  CC_OK = 0,
 
-    CC_ERR_ALLOC            = 1,
-    CC_ERR_INVALID_CAPACITY = 2,
-    CC_ERR_INVALID_RANGE    = 3,
-    CC_ERR_MAX_CAPACITY     = 4,
-    CC_ERR_KEY_NOT_FOUND    = 6,
-    CC_ERR_VALUE_NOT_FOUND  = 7,
-    CC_ERR_OUT_OF_RANGE     = 8,
+  CC_ERR_ALLOC = 1,
+  CC_ERR_INVALID_CAPACITY = 2,
+  CC_ERR_INVALID_RANGE = 3,
+  CC_ERR_MAX_CAPACITY = 4,
+  CC_ERR_KEY_NOT_FOUND = 6,
+  CC_ERR_VALUE_NOT_FOUND = 7,
+  CC_ERR_OUT_OF_RANGE = 8,
 
-    CC_ITER_END             = 9,
+  CC_ITER_END = 9,
 };
 
 #define CC_MAX_ELEMENTS 16777216LU
 
 #if defined(_MSC_VER)
 
-#define       INLINE __inline
+#define INLINE __inline
 #define FORCE_INLINE __forceinline
 
 #else
 
-#define       INLINE inline
+#define INLINE inline
 #define FORCE_INLINE inline __attribute__((always_inline))
 
 #endif /* _MSC_VER */
 
-
-int cc_common_cmp_str(const void *key1, const void *key2);
 int cc_common_cmp_ptr(const void *key1, const void *key2);
 
-void *malloc(unsigned int size);
-void *calloc(unsigned int nmemb, unsigned int size);
-void free(void *ptr);
-void *memset(void *s, int c, size_t n);
-int strcmp(const char *s1, const char *s2);
-void *memcpy(void *dst, const void *src, unsigned int n);
-void *memmove(void *dst, const void *src, unsigned int n);
-void qsort(void *base, size_t nmemb, size_t size,
-    int (*compar)(const void *, const void *));
-
-#define CC_CMP_STRING  cc_common_cmp_str
+#define CC_CMP_STRING cc_common_cmp_str
 #define CC_CMP_POINTER cc_common_cmp_ptr
-
 
 #endif /* COLLECTIONS_C_COMMON_H */

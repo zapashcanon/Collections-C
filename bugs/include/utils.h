@@ -1,12 +1,10 @@
 #ifndef TEST_UTILS_H
 #define TEST_UTILS_H
 
- __attribute__((import_module("symbolic"), import_name("i32_symbol"))) int symbol();
- __attribute__((import_module("symbolic"), import_name("assume"))) void assume(int);
- __attribute__((import_module("symbolic"), import_name("assert"))) void assert(int);
+#include <owi.h>
 
 #define symb_str(X)                          \
-    int X = symbol();                      \
+    int X = owi_i32();                      \
     char str_##X[] = {X, '\0'}
 
 void CHECK_EQUAL_C_STRING(char *s1, char *s2);

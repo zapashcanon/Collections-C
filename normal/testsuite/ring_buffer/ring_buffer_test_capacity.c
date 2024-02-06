@@ -76,8 +76,8 @@ int main() {
   rbuf_enqueue(rbuf, str_x);
   rbuf_enqueue(rbuf, str_y);
 
-  owi_assert(rbuf_peek(rbuf, 0) == str_x);
-  owi_assert(rbuf_peek(rbuf, 1) == str_y);
+  owi_assert((void *)rbuf_peek(rbuf, 0) == (void *)str_x);
+  owi_assert((void *)rbuf_peek(rbuf, 1) == (void *)str_y);
   uint64_t out;
   rbuf_dequeue(rbuf, &out);
   owi_assert(items[2] == out);
