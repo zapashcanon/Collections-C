@@ -1,4 +1,0 @@
-(cram
- (deps
-  %{bin:owi}
-  array_test_add.c))
