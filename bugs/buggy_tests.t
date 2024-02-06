@@ -11,9 +11,9 @@ Bug-triggering tests:
   Model:
     (model
       (symbol_0 (i32 32768))
-      (symbol_1 (i32 16777344))
+      (symbol_1 (i32 134218240))
       (symbol_10 (i32 3))
-      (symbol_2 (i32 1073741824))
+      (symbol_2 (i32 512))
       (symbol_3 (i32 0))
       (symbol_4 (i32 0))
       (symbol_5 (i32 1))
