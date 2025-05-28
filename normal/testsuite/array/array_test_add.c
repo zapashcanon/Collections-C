@@ -10,9 +10,9 @@ int main() {
   stat = array_new(&v1);
   owi_assert(stat == CC_OK);
 
-  int a = owi_i32();
-  int b = owi_i32();
-  int c = owi_i32();
+  int a = owi_int();
+  int b = owi_int();
+  int c = owi_int();
 
   array_add(v1, &a);
   array_add(v1, &b);

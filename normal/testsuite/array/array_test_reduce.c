@@ -15,11 +15,11 @@ static int stat;
 int main() {
   stat = array_new(&v1);
 
-  int a = owi_i32();
-  int b = owi_i32();
-  int c = owi_i32();
-  int d = owi_i32();
-  int e = owi_i32();
+  int a = owi_int();
+  int b = owi_int();
+  int c = owi_int();
+  int d = owi_int();
+  int e = owi_int();
   int result;
 
   array_add(v1, &a);

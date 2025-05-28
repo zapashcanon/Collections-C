@@ -17,9 +17,9 @@ int main() {
   int *b = malloc(sizeof(int));
   int *c = malloc(sizeof(int));
 
-  int x = owi_i32();
-  int y = owi_i32();
-  int z = owi_i32();
+  int x = owi_int();
+  int y = owi_int();
+  int z = owi_int();
 
   *a = x;
   *b = y;

@@ -10,14 +10,14 @@ int a, b, c, d, e, f, g, h;
 void setup_test() {
   slist_new(&list), slist_new(&list2);
 
-  a = owi_i32();
-  b = owi_i32();
-  c = owi_i32();
-  d = owi_i32();
-  e = owi_i32();
-  f = owi_i32();
-  g = owi_i32();
-  h = owi_i32();
+  a = owi_int();
+  b = owi_int();
+  c = owi_int();
+  d = owi_int();
+  e = owi_int();
+  f = owi_int();
+  g = owi_int();
+  h = owi_int();
 
   int *va = (int *)malloc(sizeof(int));
   int *vb = (int *)malloc(sizeof(int));
@@ -58,7 +58,7 @@ void teardown_test() {
 int main() {
   setup_test();
 
-  int r = owi_i32();
+  int r = owi_int();
   int *rr = (int *)malloc(sizeof(int));
 
   *rr = r;

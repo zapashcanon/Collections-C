@@ -13,34 +13,34 @@ int main() {
   setup_test();
 
   uint64_t items[10];
-  int a = owi_i32();
+  int a = owi_int();
   char str_a[] = {a, '\0'};
 
-  int b = owi_i32();
+  int b = owi_int();
   char str_b[] = {b, '\0'};
 
-  int c = owi_i32();
+  int c = owi_int();
   char str_c[] = {c, '\0'};
 
-  int d = owi_i32();
+  int d = owi_int();
   char str_d[] = {d, '\0'};
 
-  int e = owi_i32();
+  int e = owi_int();
   char str_e[] = {e, '\0'};
 
-  int f = owi_i32();
+  int f = owi_int();
   char str_f[] = {f, '\0'};
 
-  int g = owi_i32();
+  int g = owi_int();
   char str_g[] = {g, '\0'};
 
-  int h = owi_i32();
+  int h = owi_int();
   char str_h[] = {h, '\0'};
 
-  int i = owi_i32();
+  int i = owi_int();
   char str_i[] = {i, '\0'};
 
-  int j = owi_i32();
+  int j = owi_int();
   char str_j[] = {j, '\0'};
   rbuf_enqueue(rbuf, a);
   rbuf_enqueue(rbuf, b);

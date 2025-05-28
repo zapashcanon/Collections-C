@@ -8,7 +8,7 @@ static int stat;
 
 int main() {
   stat = array_new(&v1);
-  int n = owi_i32();
+  int n = owi_int();
   owi_assume(n > 2);
   owi_assume(n < 16);
 

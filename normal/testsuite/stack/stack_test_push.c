@@ -10,9 +10,9 @@ void teardown_tests() { stack_destroy(s); }
 int main() {
   setup_tests();
 
-  int a = owi_i32();
-  int b = owi_i32();
-  int c = owi_i32();
+  int a = owi_int();
+  int b = owi_int();
+  int c = owi_int();
 
   int *p;
 

@@ -35,16 +35,16 @@ void teardown_tests() {
 int main() {
   setup_tests();
 
-  int a = owi_i32();
-  int b = owi_i32();
-  int c = owi_i32();
-  int d = owi_i32();
-  int e = owi_i32();
-  int f = owi_i32();
+  int a = owi_int();
+  int b = owi_int();
+  int c = owi_int();
+  int d = owi_int();
+  int e = owi_int();
+  int f = owi_int();
 
-  int x = owi_i32();
-  int y = owi_i32();
-  int z = owi_i32();
+  int x = owi_int();
+  int y = owi_int();
+  int z = owi_int();
   int *ptr;
 
   owi_assume(x < 8388608 && x > -8388608);

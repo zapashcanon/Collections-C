@@ -7,10 +7,10 @@ static TreeSet *set;
 int main() {
   treeset_new(cmp, &set);
 
-  int a = owi_i32();
-  int b = owi_i32();
-  int c = owi_i32();
-  int d = owi_i32();
+  int a = owi_int();
+  int b = owi_int();
+  int c = owi_int();
+  int d = owi_int();
   owi_assume(a < b && b < c && c < d);
 
   treeset_add(set, &a);

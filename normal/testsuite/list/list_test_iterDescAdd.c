@@ -9,14 +9,14 @@ int a, b, c, d, e, f, g, h;
 void setup_tests() {
   list_new(&list1), list_new(&list2);
 
-  a = owi_i32();
-  b = owi_i32();
-  c = owi_i32();
-  d = owi_i32();
-  e = owi_i32();
-  f = owi_i32();
-  g = owi_i32();
-  h = owi_i32();
+  a = owi_int();
+  b = owi_int();
+  c = owi_int();
+  d = owi_int();
+  e = owi_int();
+  f = owi_int();
+  g = owi_int();
+  h = owi_int();
 
   int *va = (int *)malloc(sizeof(int));
   int *vb = (int *)malloc(sizeof(int));
@@ -59,8 +59,8 @@ int main() {
 
   int *px = (int *)malloc(sizeof(int));
   int *py = (int *)malloc(sizeof(int));
-  int x = owi_i32();
-  int y = owi_i32();
+  int x = owi_int();
+  int y = owi_int();
 
   *px = x, *py = y;
 

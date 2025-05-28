@@ -22,9 +22,9 @@ int main() {
 
   owi_assert(2 == deque_capacity(deque));
 
-  int a = owi_i32();
-  int b = owi_i32();
-  int c = owi_i32();
+  int a = owi_int();
+  int b = owi_int();
+  int c = owi_int();
 
   deque_add(deque, &a);
   deque_add(deque, &b);

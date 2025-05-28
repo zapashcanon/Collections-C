@@ -18,12 +18,12 @@ bool pred3(const void *e) { return *(int *)e > 5; }
 int main() {
   setup_tests();
 
-  int a = owi_i32();
-  int b = owi_i32();
-  int c = owi_i32();
-  int d = owi_i32();
-  int e = owi_i32();
-  int f = owi_i32();
+  int a = owi_int();
+  int b = owi_int();
+  int c = owi_int();
+  int d = owi_int();
+  int e = owi_int();
+  int f = owi_int();
 
   owi_assume(!pred3(&d) && !pred3(&e) && pred3(&f) && !pred3(&a) &&
              !pred3(&b) && !pred3(&c));

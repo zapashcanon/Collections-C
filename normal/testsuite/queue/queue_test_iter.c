@@ -18,9 +18,9 @@ void teardown_test() {
 int main() {
   setup_test();
 
-  int a = owi_i32();
-  int b = owi_i32();
-  int c = owi_i32();
+  int a = owi_int();
+  int b = owi_int();
+  int c = owi_int();
 
   queue_enqueue(q, &a);
   queue_enqueue(q, &b);

@@ -25,10 +25,10 @@ void teardown_test() {
 int main() {
   setup_tests();
 
-  int a = owi_i32();
-  int b = owi_i32();
-  int c = owi_i32();
-  int d = owi_i32();
+  int a = owi_int();
+  int b = owi_int();
+  int c = owi_int();
+  int d = owi_int();
 
   list_add(list1, &a);
   list_add(list1, &b);

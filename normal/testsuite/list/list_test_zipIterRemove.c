@@ -15,37 +15,37 @@ void teardown_test() {
 int main() {
   setup_tests();
 
-  int a = owi_i32();
+  int a = owi_int();
   owi_assume(a > 0);
   owi_assume(a < 127);
   char str_a[] = {a, '\0'};
 
-  int b = owi_i32();
+  int b = owi_int();
   owi_assume(b > 0);
   owi_assume(b < 127);
   char str_b[] = {b, '\0'};
 
-  int c = owi_i32();
+  int c = owi_int();
   owi_assume(c > 0);
   owi_assume(c < 127);
   char str_c[] = {c, '\0'};
 
-  int d = owi_i32();
+  int d = owi_int();
   owi_assume(d > 0);
   owi_assume(d < 127);
   char str_d[] = {d, '\0'};
 
-  int e = owi_i32();
+  int e = owi_int();
   owi_assume(e > 0);
   owi_assume(e < 127);
   char str_e[] = {e, '\0'};
 
-  int f = owi_i32();
+  int f = owi_int();
   owi_assume(f > 0);
   owi_assume(f < 127);
   char str_f[] = {f, '\0'};
 
-  int g = owi_i32();
+  int g = owi_int();
   owi_assume(g > 0);
   owi_assume(g < 127);
   char str_g[] = {g, '\0'};

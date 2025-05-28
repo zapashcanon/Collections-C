@@ -12,9 +12,9 @@ void teardown_tests() { deque_destroy(deque); }
 int main() {
   setup_tests();
 
-  int a = owi_i32();
-  int b = owi_i32();
-  int c = owi_i32();
+  int a = owi_int();
+  int b = owi_int();
+  int c = owi_int();
 
   deque_add_last(deque, &a);
   deque_add_last(deque, &b);

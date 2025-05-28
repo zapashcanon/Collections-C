@@ -18,19 +18,19 @@ void teardown_test() {
 int main() {
   setup_test();
 
-  int a = owi_i32();
+  int a = owi_int();
 
   char str_a[] = {a, '\0'};
 
-  int b = owi_i32();
+  int b = owi_int();
 
   char str_b[] = {b, '\0'};
 
-  int c = owi_i32();
+  int c = owi_int();
 
   char str_c[] = {c, '\0'};
 
-  int d = owi_i32();
+  int d = owi_int();
 
   char str_d[] = {d, '\0'};
 

@@ -7,26 +7,26 @@ static TreeTable *table;
 int main() {
   treetable_new(cmp, &table);
 
-  int x = owi_i32();
-  int y = owi_i32();
-  int z = owi_i32();
-  int w = owi_i32();
+  int x = owi_int();
+  int y = owi_int();
+  int z = owi_int();
+  int w = owi_int();
 
   owi_assume(x < y && y < w && w < z);
 
-  int a = owi_i32();
+  int a = owi_int();
 
   char str_a[] = {a, '\0'};
 
-  int b = owi_i32();
+  int b = owi_int();
 
   char str_b[] = {b, '\0'};
 
-  int c = owi_i32();
+  int c = owi_int();
 
   char str_c[] = {c, '\0'};
 
-  int d = owi_i32();
+  int d = owi_int();
 
   char str_d[] = {d, '\0'};
 
