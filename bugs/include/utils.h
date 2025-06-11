@@ -3,8 +3,9 @@
 
 #include <owi.h>
 
+// TODO: why is this an int?
 #define symb_str(X)                          \
-    int X = owi_i32();                      \
+    int X = owi_int();                      \
     char str_##X[] = {X, '\0'}
 
 void CHECK_EQUAL_C_STRING(char *s1, char *s2);
